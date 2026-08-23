@@ -20,6 +20,16 @@
 # production
 /build
 
+# Capacitor / Android build output
+/android/.gradle/
+/android/build/
+/android/app/build/
+/android/local.properties
+
+# Superseded Android installers (the current APK remains tracked for the mobile download page)
+/public/downloads/dokit-android-v1.0.0-debug.apk
+/public/downloads/dokit-android-v1.0.1-debug.apk
+
 # misc
 .DS_Store
 *.pem
