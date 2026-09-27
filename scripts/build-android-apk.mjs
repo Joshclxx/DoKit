@@ -1,9 +1,10 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
 const root = process.cwd();
 const androidRoot = join(root, "android");
+const appVersion = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version;
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -69,7 +70,7 @@ if (process.platform === "win32") {
 
 const apk = join(androidRoot, "app", "build", "outputs", "apk", "debug", "app-debug.apk");
 const downloads = join(root, "public", "downloads");
-const publicApk = join(downloads, "dokit-android-v1.0.2-debug.apk");
+const publicApk = join(downloads, `dokit-android-v${appVersion}-debug.apk`);
 mkdirSync(downloads, { recursive: true });
 copyFileSync(apk, publicApk);
 console.log(`APK copied to ${publicApk}`);

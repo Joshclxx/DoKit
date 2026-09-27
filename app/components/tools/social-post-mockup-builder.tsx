@@ -16,7 +16,7 @@ interface PostConfig {
 const platformMeta: Record<Platform, { label: string; icon: string; maxLen: number; color: string }> = {
   twitter: { label: "X / Twitter", icon: "𝕏", maxLen: 280, color: "#1da1f2" },
   facebook: { label: "Facebook", icon: "f", maxLen: 63206, color: "#1877f2" },
-  instagram: { label: "Instagram", icon: "📷", maxLen: 2200, color: "#e1306c" },
+  instagram: { label: "Instagram", icon: "", maxLen: 2200, color: "#e1306c" },
   linkedin: { label: "LinkedIn", icon: "in", maxLen: 3000, color: "#0077b5" },
   threads: { label: "Threads", icon: "@", maxLen: 500, color: "#000" },
 };
@@ -24,7 +24,7 @@ const platformMeta: Record<Platform, { label: string; icon: string; maxLen: numb
 const defaults: PostConfig = {
   platform: "twitter",
   displayName: "John Doe", handle: "johndoe", avatar: "",
-  content: "Just shipped an amazing new feature! 🚀\n\nCheck it out at dokit.app\n\n#buildinpublic #webdev",
+  content: "Just shipped an amazing new feature! \n\nCheck it out at dokit.app\n\n#buildinpublic #webdev",
   image: null, likes: 142, comments: 23, shares: 47,
   verified: true, darkMode: true, timestamp: "2h",
 };
@@ -95,7 +95,7 @@ export default function SocialPostMockup() {
             <div className="flex gap-2">
               <button onClick={() => imgInputRef.current?.click()}
                 className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium hover:bg-surface-hover">
-                🖼️ {config.image ? "Change Image" : "Add Image"}
+                 {config.image ? "Change Image" : "Add Image"}
               </button>
               {config.image && <button onClick={() => update("image", null)} className="text-xs text-danger hover:underline">Remove</button>}
               <input ref={imgInputRef} type="file" accept="image/*" hidden onChange={handleImageUpload} />
@@ -143,10 +143,9 @@ export default function SocialPostMockup() {
 
               {/* Engagement */}
               <div className="mt-3 flex items-center justify-between pt-3" style={{ borderTop: `1px solid ${isDark ? "#38444d" : "#e1e8ed"}` }}>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>💬 {fmtNum(config.comments)}</span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>🔄 {fmtNum(config.shares)}</span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>❤️ {fmtNum(config.likes)}</span>
-                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>📤</span>
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>Comments {fmtNum(config.comments)}</span>
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>Shares {fmtNum(config.shares)}</span>
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: muted }}>Likes {fmtNum(config.likes)}</span>
               </div>
             </div>
           </div>

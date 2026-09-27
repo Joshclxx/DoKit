@@ -8,21 +8,9 @@
   display: contents;
 }
 
-html[data-dokit-device="mobile"]:not([data-dokit-runtime="app"]) .mobile-download-landing {
-  display: block;
-}
-
-html[data-dokit-device="mobile"]:not([data-dokit-runtime="app"]) .dokit-system-shell {
-  display: none;
-}
-
 @media (max-width: 767px) {
   html:not([data-dokit-runtime="app"]) .mobile-download-landing {
     display: block;
-  }
-
-  html:not([data-dokit-runtime="app"]) .dokit-system-shell {
-    display: none;
   }
 }
 
@@ -125,12 +113,39 @@ body {
   color: var(--accent-fg);
 }
 
+.tool-workspace {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* Mobile tool actions follow the wireframe's thumb-reachable sticky bar. */
 @media (max-width: 767px) {
+  .mobile-chip-strip {
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-chip-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-chip-strip > button {
+    min-height: 44px;
+    scroll-snap-align: start;
+  }
+
+  .tool-workspace :is(input[type="text"], input[type="email"], input[type="number"], input[type="url"], input[type="date"], input[type="search"], textarea, select) {
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
   .tool-action-bar {
     position: sticky;
-    bottom: 0.75rem;
+    bottom: calc(4rem + env(safe-area-inset-bottom) + 0.75rem);
     z-index: 30;
+    flex-wrap: wrap;
     margin-inline: -0.5rem;
     padding: 0.625rem;
     border: 1px solid var(--border);
@@ -140,9 +155,34 @@ body {
     backdrop-filter: blur(14px);
   }
 
+  .tool-action-bar button {
+    min-height: 44px;
+  }
+
+  .document-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .document-action-bar > :first-child {
+    width: 100%;
+  }
+
+  .document-action-bar > :first-child > button {
+    flex: 1;
+  }
+
+  .document-action-bar > :last-child {
+    width: 100%;
+  }
+
+  .document-action-bar > :last-child > button:last-child {
+    flex: 1;
+  }
+
   .tool-action-bar > :last-child {
     max-width: 100%;
-    overflow-x: auto;
+    flex-wrap: wrap;
   }
 }
 

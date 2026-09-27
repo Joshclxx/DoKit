@@ -56,10 +56,10 @@ export function ToolGrid() {
       </div>
 
       {/* Category Chips */}
-      <div className="flex flex-wrap gap-2">
+      <div className="mobile-chip-strip flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible" aria-label="Filter tools by category">
         <button
           onClick={() => setActiveCategory("All")}
-          className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+          className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
             activeCategory === "All"
               ? "bg-accent text-accent-fg"
               : "bg-surface border border-border text-muted hover:text-foreground hover:border-border-hover"
@@ -73,7 +73,7 @@ export function ToolGrid() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 activeCategory === cat
                   ? "bg-accent text-accent-fg"
                   : "bg-surface border border-border text-muted hover:text-foreground hover:border-border-hover"
@@ -88,7 +88,6 @@ export function ToolGrid() {
       {/* Results */}
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-16 text-center">
-          <span className="text-4xl">🔍</span>
           <p className="text-lg font-medium">No tools found</p>
           <p className="text-sm text-muted">
             Try a different search term or category.

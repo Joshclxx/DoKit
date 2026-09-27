@@ -37,7 +37,7 @@ function toMarkdown(d: SpecData): string {
     ...d.endpoints.filter((e) => e.path).map((e) => `| ${e.method} | ${e.path} | ${e.description} |`), "",
     "## Environment Variables",
     "| Variable | Description | Required |", "|----------|-------------|----------|",
-    ...d.envVars.filter((e) => e.key).map((e) => `| \`${e.key}\` | ${e.description} | ${e.required ? "✅" : "❌"} |`), "",
+    ...d.envVars.filter((e) => e.key).map((e) => `| \`${e.key}\` | ${e.description} | ${e.required ? "" : ""} |`), "",
     ...(d.rules ? ["## Business Rules", d.rules, ""] : []),
     ...(d.constraints ? ["## Constraints", d.constraints, ""] : []),
   ];
@@ -169,9 +169,9 @@ export default function SystemSpecBuilder() {
             </div>
             <div className="flex gap-2">
               <button onClick={async () => { await copyToClipboard(output); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                className="text-xs text-muted hover:text-foreground">{copied ? "✓ Copied" : "📋 Copy"}</button>
+                className="text-xs text-muted hover:text-foreground">{copied ? "✓ Copied" : " Copy"}</button>
               <button onClick={() => downloadFile(output, `${data.projectName || "spec"}${ext}`)}
-                className="text-xs text-muted hover:text-foreground">💾 Export</button>
+                className="text-xs text-muted hover:text-foreground"> Export</button>
             </div>
           </div>
           <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap max-h-[75vh] overflow-y-auto">{output}</pre>

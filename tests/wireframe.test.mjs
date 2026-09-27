@@ -7,13 +7,13 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (...parts) => readFileSync(join(root, ...parts), "utf8");
 
-test("wireframe shell routes and the site-wide mobile handoff are present", () => {
+test("wireframe shell routes and the mobile Android download are present", () => {
   assert.ok(existsSync(join(root, "app", "settings", "page.tsx")));
   assert.ok(existsSync(join(root, "app", "kits", "page.tsx")));
   const rootLayout = read("app", "layout.tsx");
   assert.match(rootLayout, /<Sidebar \/>/);
   assert.match(rootLayout, /<MobileTabBar \/>/);
-  assert.match(rootLayout, /<MobileDownloadLanding \/>/);
+  assert.match(read("app", "settings", "page.tsx"), /<MobileDownloadLanding \/>/);
   assert.match(rootLayout, /<SplashScreen \/>/);
   assert.match(rootLayout, /dataset\.dokitRuntime/);
   assert.match(rootLayout, /dataset\.dokitDevice/);
@@ -31,9 +31,10 @@ test("wireframe shell routes and the site-wide mobile handoff are present", () =
   assert.doesNotMatch(navbar, /href="\/tools"/);
   assert.doesNotMatch(navbar, /href="\/settings"/);
   const landing = read("app", "components", "mobile-download-landing.tsx");
-  assert.match(landing, /Get DoKit for Android/);
-  assert.match(landing, /Download APK · \{apkSize\}/);
-  assert.match(landing, /dokit-android-v1\.0\.2-debug\.apk/);
+  assert.match(landing, /DoKit for Android/);
+  assert.match(landing, /Version 1\.0\.3/);
+  assert.match(landing, />Get APK</);
+  assert.match(landing, /dokit-android-v1\.0\.3-debug\.apk/);
   assert.match(landing, /NEXT_PUBLIC_ANDROID_APK_URL/);
   assert.doesNotMatch(landing, /Continue in the browser/);
 });
@@ -74,9 +75,9 @@ test("Capacitor packages the static export as the installed mobile app", () => {
   const packageJson = JSON.parse(read("package.json"));
   assert.match(capacitor, /appId: "app\.dokit\.mobile"/);
   assert.match(capacitor, /webDir: "out"/);
-  assert.match(capacitor, /DoKitApp\/1\.0\.2/);
-  assert.match(read("android", "app", "build.gradle"), /versionCode 3/);
-  assert.match(read("android", "app", "build.gradle"), /versionName "1\.0\.2"/);
+  assert.match(capacitor, /DoKitApp\/1\.0\.3/);
+  assert.match(read("android", "app", "build.gradle"), /versionCode 4/);
+  assert.match(read("android", "app", "build.gradle"), /versionName "1\.0\.3"/);
   assert.match(nextConfig, /CAPACITOR_BUILD/);
   assert.match(nextConfig, /output: "export"/);
   assert.match(nextConfig, /unoptimized: true/);

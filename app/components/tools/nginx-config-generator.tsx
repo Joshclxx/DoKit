@@ -167,7 +167,7 @@ export default function NginxConfigGenerator() {
     <div className="space-y-6">
       <div className="grid gap-5 lg:grid-cols-2">
         {/* Form */}
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
           <fieldset className="rounded-lg border border-border bg-surface p-4 space-y-3">
             <legend className="px-2 text-xs font-semibold uppercase tracking-wider text-muted">Server</legend>
             <div className="grid gap-2 sm:grid-cols-2">
@@ -211,11 +211,11 @@ export default function NginxConfigGenerator() {
         </div>
 
         {/* Output */}
-        <div className="lg:sticky lg:top-4 self-start">
+        <div className="min-w-0 self-start lg:sticky lg:top-4">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">Generated Config</span>
             <button onClick={async () => { await copyToClipboard(output); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-              className="text-xs text-muted hover:text-foreground">{copied ? "✓ Copied" : "📋 Copy"}</button>
+              className="text-xs text-muted hover:text-foreground">{copied ? "✓ Copied" : " Copy"}</button>
           </div>
           <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs leading-relaxed whitespace-pre overflow-x-auto max-h-[70vh] overflow-y-auto">{output}</pre>
         </div>

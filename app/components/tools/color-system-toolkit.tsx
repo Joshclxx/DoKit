@@ -176,14 +176,14 @@ export default function ColorSystemToolkit() {
         <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">Gradient Preview</div>
         <div className="h-16 rounded-lg" style={{ background: `linear-gradient(135deg, ${color}, ${complementary(color)})` }} />
         <button onClick={() => copy(`linear-gradient(135deg, ${color}, ${complementary(color)})`)}
-          className="mt-1 text-xs text-muted hover:text-foreground">📋 Copy CSS</button>
+          className="mt-1 text-xs text-muted hover:text-foreground"> Copy CSS</button>
       </div>
 
       {/* Design tokens */}
       <div>
         <div className="mb-2 flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted">Design Tokens (CSS)</span>
-          <button onClick={() => copy(tokens)} className="text-xs text-muted hover:text-foreground">{copied === tokens ? "✓" : "📋"}</button>
+          <button onClick={() => copy(tokens)} className="text-xs text-muted hover:text-foreground">{copied === tokens ? "✓" : "Copy"}</button>
         </div>
         <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs whitespace-pre-wrap">{tokens}</pre>
       </div>

@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: "app.dokit.mobile",
   appName: "DoKit",
   webDir: "out",
-  appendUserAgent: " DoKitApp/1.0.2",
+  appendUserAgent: " DoKitApp/1.0.3",
   backgroundColor: "#f4f9f7",
   android: {
     backgroundColor: "#f4f9f7",

@@ -154,7 +154,7 @@ export default function RegexBuilder() {
                     onClick={() => handleCopy(m.full, `m${i}`)}
                     className="text-xs text-muted hover:text-foreground"
                   >
-                    {copied === `m${i}` ? "✓" : "📋"}
+                    {copied === `m${i}` ? "✓" : "Copy"}
                   </button>
                 </div>
                 {m.groups.length > 0 && (

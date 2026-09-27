@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef } from "react";
 import { copyToClipboard, downloadFile } from "@/lib/utils/download";
+import { downloadHtmlPagesAsPdf } from "@/lib/utils/pdf-download";
 
 /* ── Minimal Markdown → HTML parser ──────────────── */
 function mdToHtml(md: string): string {
@@ -98,8 +99,8 @@ const actions: Action[] = [
   { label: "Heading 1", icon: "H1", before: "# ", after: "" },
   { label: "Heading 2", icon: "H2", before: "## ", after: "" },
   { label: "Heading 3", icon: "H3", before: "### ", after: "" },
-  { label: "Link", icon: "🔗", before: "[", after: "](url)" },
-  { label: "Image", icon: "🖼", before: "![alt](", after: ")" },
+  { label: "Link", icon: "", before: "[", after: "](url)" },
+  { label: "Image", icon: "", before: "![alt](", after: ")" },
   { label: "Code", icon: "</>", before: "`", after: "`" },
   { label: "Code Block", icon: "{ }", before: "```\n", after: "\n```" },
   { label: "Quote", icon: "❝", before: "> ", after: "" },
@@ -162,23 +163,16 @@ export default function MarkdownEditor() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handlePrint = () => {
-    const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>Document</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;padding:40px 60px;color:#222;font-size:14px;line-height:1.7}
-@media print{@page{margin:16mm}body{padding:0}}
-h1{font-size:24px;font-weight:700;margin:24px 0 8px;color:#111}h2{font-size:20px;font-weight:600;margin:20px 0 6px;color:#222}h3{font-size:17px;font-weight:600;margin:16px 0 6px}
-p{margin:8px 0}ul,ol{margin:8px 0;padding-left:24px}li{margin:4px 0}
-blockquote{margin:12px 0;padding:8px 16px;border-left:3px solid #ccc;color:#555}
-pre{background:#f5f5f5;padding:16px;border-radius:6px;overflow-x:auto;margin:12px 0;font-size:13px}code{background:#f0f0f0;padding:2px 5px;border-radius:3px;font-size:13px}
-pre code{background:none;padding:0}hr{border:none;border-top:1px solid #ddd;margin:20px 0}
-a{color:#2563eb}img{max-width:100%;border-radius:4px}
-table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f5f5f5}
-</style></head><body>${rendered}</body></html>`);
-    win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 400);
+  const handleExport = async () => {
+    const content = document.createElement("article");
+    content.className = "prose-dokit";
+    content.style.cssText = "background:#fff;color:#222;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.7";
+    content.innerHTML = rendered;
+    try {
+      await downloadHtmlPagesAsPdf([content], "document.pdf", { marginsMm: [16, 16, 16, 16] });
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    }
   };
 
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
@@ -195,7 +189,7 @@ table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #
             title={a.label}
             className="flex h-8 min-w-[32px] items-center justify-center rounded px-1.5 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
-            {a.icon}
+            {a.label}
           </button>
         ))}
         <div className="mx-2 h-6 w-px bg-border" />
@@ -208,7 +202,7 @@ table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #
               view === v ? "bg-accent text-accent-fg" : "text-muted hover:text-foreground"
             }`}
           >
-            {v === "edit" ? "✏️ Edit" : v === "split" ? "◫ Split" : "👁 Preview"}
+            {v === "edit" ? " Edit" : v === "split" ? "◫ Split" : " Preview"}
           </button>
         ))}
       </div>
@@ -262,9 +256,9 @@ table{border-collapse:collapse;width:100%;margin:12px 0}th,td{border:1px solid #
           className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
           Export .html
         </button>
-        <button onClick={handlePrint}
+        <button onClick={handleExport}
           className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          🖨 Print / PDF
+          Export PDF
         </button>
       </div>
     </div>

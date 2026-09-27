@@ -13,16 +13,16 @@ let counter = 0;
 const uid = () => `w-${++counter}`;
 
 const toolMeta: Record<Tool, { label: string; icon: string }> = {
-  select: { label: "Select", icon: "👆" },
+  select: { label: "Select", icon: "" },
   rect: { label: "Container", icon: "▢" },
-  button: { label: "Button", icon: "🔘" },
+  button: { label: "Button", icon: "" },
   text: { label: "Text", icon: "T" },
   input: { label: "Input", icon: "▭" },
-  image: { label: "Image", icon: "🖼" },
+  image: { label: "Image", icon: "" },
   nav: { label: "Navbar", icon: "☰" },
-  card: { label: "Card", icon: "🃏" },
+  card: { label: "Card", icon: "" },
   list: { label: "List", icon: "☰" },
-  eraser: { label: "Eraser", icon: "🧹" },
+  eraser: { label: "Eraser", icon: "" },
 };
 
 export default function SketchWireframeTool() {
@@ -181,7 +181,7 @@ export default function SketchWireframeTool() {
         {(Object.keys(toolMeta) as Tool[]).map((t) => (
           <button key={t} onClick={() => setActiveTool(t)}
             className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${activeTool === t ? "border-accent bg-accent/10 text-accent" : "border-border text-muted hover:text-foreground"}`}>
-            {toolMeta[t].icon} {toolMeta[t].label}
+            {toolMeta[t].label}
           </button>
         ))}
         <div className="ml-auto flex items-center gap-3">

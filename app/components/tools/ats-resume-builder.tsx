@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useMemo } from "react";
-import { escapeHtml } from "@/lib/utils/html";
+import { downloadHtmlPagesAsPdf, waitForPdfPreview } from "@/lib/utils/pdf-download";
 
 /* ── Data Model ─────────────────────────────────── */
 
@@ -119,16 +119,18 @@ export default function ATSResumeBuilder() {
   const inp = "h-9 w-full rounded-lg border border-border bg-background px-3 text-sm focus:border-accent focus:outline-none";
   const ta = "w-full rounded-lg border border-border bg-background p-3 text-sm focus:border-accent focus:outline-none resize-y";
 
-  const handlePrint = () => {
-    const el = document.getElementById("resume-preview");
-    if (!el) return;
-    const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>${escapeHtml(data.name || "Document")}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-@media print{@page{margin:12mm 16mm}body{margin:0}}</style></head><body>${el.innerHTML}</body></html>`);
-    win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 400);
+  const handleExport = async () => {
+    if (tab !== "preview") {
+      setTab("preview");
+      await waitForPdfPreview();
+    }
+    try {
+      const preview = document.getElementById("resume-preview");
+      if (!preview) throw new Error("Resume preview is unavailable.");
+      await downloadHtmlPagesAsPdf([preview], `${mode}-document.pdf`, { marginsMm: [12, 16, 12, 16] });
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    }
   };
 
   return (
@@ -141,7 +143,7 @@ export default function ATSResumeBuilder() {
             {(["resume", "cv"] as const).map((m) => (
               <button key={m} onClick={() => setMode(m)}
                 className={`rounded-md px-5 py-1.5 text-sm font-medium transition-colors ${mode === m ? "bg-accent text-accent-fg" : "text-muted hover:text-foreground"}`}>
-                {m === "resume" ? "📄 Resume" : "📋 CV"}
+                {m === "resume" ? " Resume" : " CV"}
               </button>
             ))}
           </div>
@@ -195,18 +197,18 @@ export default function ATSResumeBuilder() {
       </div>
 
       {/* ── Tabs + Actions ── */}
-      <div className="flex items-center justify-between">
+      <div className="tool-action-bar document-action-bar flex flex-wrap items-center justify-between gap-2">
         <div className="flex rounded-lg border border-border bg-surface p-1">
           {(["edit", "preview"] as const).map((t) => (
             <button key={t} onClick={() => setTab(t)}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${tab === t ? "bg-accent text-accent-fg" : "text-muted hover:text-foreground"}`}>
-              {t === "edit" ? "✏️ Edit" : "👁 Preview"}
+              {t === "edit" ? " Edit" : " Preview"}
             </button>
           ))}
         </div>
-        <button onClick={handlePrint}
+        <button onClick={handleExport}
           className="rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 hover:bg-accent-hover transition-colors">
-          🖨 Export PDF
+           Export PDF
         </button>
       </div>
 
@@ -221,7 +223,7 @@ export default function ATSResumeBuilder() {
                   <div className="h-[110px] w-[110px] rounded-lg border-2 border-dashed border-border bg-background flex items-center justify-center overflow-hidden cursor-pointer hover:border-accent transition-colors"
                     onClick={() => photoRef.current?.click()}>
                     {data.photo ? <img src={data.photo} alt="" className="h-full w-full object-cover" />
-                      : <div className="text-center p-2"><div className="text-2xl">📷</div><div className="text-[10px] text-muted mt-1">2×2 Photo</div></div>}
+                      : <div className="text-center p-2"><div className="text-[10px] text-muted mt-1">2×2 Photo</div></div>}
                   </div>
                   <input ref={photoRef} type="file" accept="image/*" hidden onChange={handlePhoto} />
                   {data.photo && <button onClick={() => update("photo", null)} className="text-[10px] text-danger hover:underline">Remove</button>}
@@ -404,7 +406,7 @@ function DocPreview({ data, mode, tmpl }: { data: ResumeData; mode: "resume" | "
           {showPhoto && (
             <div style={{ width: "120px", height: "120px", borderRadius: "6px", overflow: "hidden", flexShrink: 0, border: isBanner ? `3px solid ${tmpl.headerText}44` : "2px solid #e2e8f0" }}>
               {data.photo ? <img src={data.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                : <div style={{ width: "100%", height: "100%", background: isBanner ? "#ffffff22" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: "40px", opacity: 0.2 }}>👤</span></div>}
+                : <div style={{ width: "100%", height: "100%", background: isBanner ? "#ffffff22" : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: "12px", opacity: 0.5 }}>Photo</span></div>}
             </div>
           )}
           <div style={{ flex: 1 }}>

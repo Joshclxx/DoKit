@@ -228,7 +228,7 @@ function drawInfoText(
   if (cfg.email) {
     ctx.fillStyle = clr.title;
     ctx.font = "12px 'Segoe UI', system-ui, sans-serif";
-    const emailIcon = "✉";
+    const emailIcon = "";
     if (isCenter) {
       const ew = ctx.measureText(cfg.email).width;
       ctx.fillText(emailIcon, ix - ew / 2 - 14, y);
@@ -243,7 +243,7 @@ function drawInfoText(
   if (cfg.phone) {
     ctx.fillStyle = clr.title;
     ctx.font = "12px 'Segoe UI', system-ui, sans-serif";
-    const phoneIcon = "☎";
+    const phoneIcon = "";
     if (isCenter) {
       const pw = ctx.measureText(cfg.phone).width;
       ctx.fillText(phoneIcon, ix - pw / 2 - 14, y);
@@ -2150,7 +2150,7 @@ export default function IdCardBadgeGenerator() {
                   onClick={() => photoRef.current?.click()}
                   className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:bg-surface-hover transition-colors"
                 >
-                  📷 {config.photo ? "Change Photo" : "Upload Photo"}
+                   {config.photo ? "Change Photo" : "Upload Photo"}
                 </button>
                 {config.photo && (
                   <button
@@ -2196,7 +2196,7 @@ export default function IdCardBadgeGenerator() {
                   onClick={() => logoRef.current?.click()}
                   className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:bg-surface-hover transition-colors"
                 >
-                  🏢 {config.logo ? "Change Logo" : "Upload Logo"}
+                   {config.logo ? "Change Logo" : "Upload Logo"}
                 </button>
                 {config.logo && (
                   <button

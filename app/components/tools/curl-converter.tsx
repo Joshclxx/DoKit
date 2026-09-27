@@ -198,7 +198,7 @@ export default function CurlConverter() {
           <div className="mb-2 flex items-center justify-between">
             <label className="text-sm font-medium text-muted">Output</label>
             <button onClick={handleCopy} className="text-xs text-muted hover:text-foreground">
-              {copied ? "✓ Copied" : "📋 Copy"}
+              {copied ? "✓ Copied" : " Copy"}
             </button>
           </div>
           <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-sm whitespace-pre-wrap overflow-x-auto">{output}</pre>

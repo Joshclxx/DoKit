@@ -165,9 +165,9 @@ export default function DiagramBuilder() {
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">Mermaid Code</span>
             <div className="flex gap-2">
               <button onClick={async () => { await copyToClipboard(mermaidCode); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
               <button onClick={() => downloadFile(mermaidCode, "diagram.mmd", "text/plain")}
-                className="text-xs text-muted hover:text-foreground">💾</button>
+                className="text-xs text-muted hover:text-foreground">Download</button>
             </div>
           </div>
           <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap min-h-[200px]">{mermaidCode}</pre>

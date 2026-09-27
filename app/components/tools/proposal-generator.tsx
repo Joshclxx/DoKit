@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { copyToClipboard, downloadFile } from "@/lib/utils/download";
-import { escapeHtml } from "@/lib/utils/html";
+import { downloadHtmlPagesAsPdf, waitForPdfPreview } from "@/lib/utils/pdf-download";
+import { usePagePreviewScale } from "@/lib/hooks/use-page-preview-scale";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
 import { defaultPreferences, type DoKitPreferences } from "@/lib/preferences";
 
@@ -59,6 +60,7 @@ export default function ProposalGenerator() {
   const [preferences] = useLocalStorage<DoKitPreferences>("preferences", defaultPreferences);
   const [data, setData, dataStore] = useLocalStorage<ProposalData>("tool-proposal-generator", defaultData);
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
+  const { containerRef: previewViewportRef, scale: previewScale } = usePagePreviewScale(170, activeTab === "preview");
   const [copied, setCopied] = useState(false);
   const defaultsApplied = useRef(false);
 
@@ -149,17 +151,18 @@ export default function ProposalGenerator() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handlePrint = () => {
-    const el = document.getElementById("proposal-preview");
-    if (!el) { setActiveTab("preview"); setTimeout(handlePrint, 100); return; }
-    const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>Proposal - ${escapeHtml(data.projectTitle || "Draft")}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;padding:40px 60px;color:#222;font-size:13px;line-height:1.7;white-space:pre-wrap}
-@media print{@page{margin:16mm}body{padding:0}}</style>
-</head><body>${escapeHtml(el.innerText)}</body></html>`);
-    win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 400);
+  const handleExport = async () => {
+    if (activeTab !== "preview") {
+      setActiveTab("preview");
+      await waitForPdfPreview();
+    }
+    try {
+      const preview = document.querySelector<HTMLElement>("#proposal-preview .proposal-sheet");
+      if (!preview) throw new Error("Proposal preview is unavailable.");
+      await downloadHtmlPagesAsPdf([preview], "proposal.pdf", { marginsMm: [16, 20, 16, 20], removeBlankTrailingPages: true });
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    }
   };
 
   const tabs = ["edit", "preview"] as const;
@@ -167,12 +170,12 @@ export default function ProposalGenerator() {
   return (
     <div className="space-y-6">
       {/* Tabs + actions */}
-      <div className="tool-action-bar flex items-center justify-between gap-2">
+      <div className="tool-action-bar document-action-bar flex items-center justify-between gap-2">
         <div className="flex rounded-lg border border-border bg-surface p-1">
           {tabs.map((t) => (
             <button key={t} onClick={() => setActiveTab(t)}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${activeTab === t ? "bg-accent text-accent-fg" : "text-muted hover:text-foreground"}`}>
-              {t === "edit" ? "✏️ Edit" : "👁 Preview"}
+              {t === "edit" ? " Edit" : " Preview"}
             </button>
           ))}
         </div>
@@ -185,9 +188,9 @@ export default function ProposalGenerator() {
             className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface-hover">
             Export .txt
           </button>
-          <button onClick={handlePrint}
+          <button onClick={handleExport}
             className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover">
-            🖨 Print / PDF
+            Export PDF
           </button>
         </div>
       </div>
@@ -292,8 +295,49 @@ export default function ProposalGenerator() {
         </div>
       ) : (
         /* Preview */
-        <div id="proposal-preview" className="prose-dokit rounded-lg border border-border bg-surface p-6 sm:p-8 whitespace-pre-wrap font-mono text-sm leading-relaxed">
-          {proposalText}
+        <div ref={previewViewportRef} id="proposal-preview" className="max-w-full overflow-hidden rounded-lg border border-border" style={{ background: "#fff", color: "#222" }}>
+          <style>{`
+            .proposal-sheet{box-sizing:border-box;width:170mm;max-width:none;margin:0 auto;padding:40px;background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.6;overflow-wrap:anywhere}
+            .proposal-header{padding-bottom:20px;border-bottom:2px solid #085041}
+            .proposal-kicker{margin:0 0 8px;color:#085041;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+            .proposal-title{margin:0;color:#172b27;font-size:28px;line-height:1.25}
+            .proposal-dates{margin-top:10px;color:#666;font-size:13px}
+            .proposal-parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
+            .proposal-party{padding:16px;border:1px solid #d9e4e1;border-radius:8px;background:#f8fbfa}
+            .proposal-label,.proposal-section-title{margin:0 0 8px;color:#085041;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+            .proposal-party p{margin:3px 0;font-size:14px}
+            .proposal-section{margin:24px 0}
+            .proposal-section-title{padding-bottom:7px;border-bottom:1px solid #d9e4e1}
+            .proposal-copy{margin:0;white-space:pre-wrap;font-size:14px;line-height:1.7}
+            .proposal-milestone{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:12px 0;border-bottom:1px solid #e5eae8;font-size:14px}
+            .proposal-deliverable{grid-column:1/-1;color:#666;font-size:13px}
+            .proposal-pricing{width:100%;border-collapse:collapse;font-size:14px}
+            .proposal-pricing td{padding:9px 4px;border-bottom:1px solid #e5eae8}
+            .proposal-pricing td:last-child{text-align:right;white-space:nowrap}
+            .proposal-total{display:flex;justify-content:space-between;margin-top:8px;padding-top:12px;border-top:2px solid #085041;color:#085041;font-size:18px;font-weight:700}
+          `}</style>
+          <article className="proposal-sheet" style={{ zoom: previewScale }}>
+            <header className="proposal-header">
+              <p className="proposal-kicker">Project Proposal</p>
+              <h1 className="proposal-title">{data.projectTitle || "Project Title"}</h1>
+              <p className="proposal-dates">Proposal date: {data.date}{data.validUntil && ` · Valid until: ${data.validUntil}`}</p>
+            </header>
+            <section className="proposal-parties">
+              <div className="proposal-party"><h2 className="proposal-label">Prepared for</h2><p><strong>{data.clientName || "[Client]"}</strong></p>{data.clientCompany && <p>{data.clientCompany}</p>}</div>
+              <div className="proposal-party"><h2 className="proposal-label">Prepared by</h2><p><strong>{data.yourName || "[Your Name]"}</strong></p>{data.yourTitle && <p>{data.yourTitle}</p>}{data.yourCompany && <p>{data.yourCompany}</p>}</div>
+            </section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Overview</h2><p className="proposal-copy">{data.overview || "[Project overview]"}</p></section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Scope of Work</h2><p className="proposal-copy">{data.scope || "[Scope details]"}</p></section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Timeline & Milestones</h2>
+              {data.milestones.map((milestone, index) => <div className="proposal-milestone" key={index}><strong>{index + 1}. {milestone.name || "Milestone"}</strong><span>{milestone.duration || "TBD"}</span><span className="proposal-deliverable">Deliverable: {milestone.deliverable || "TBD"}</span></div>)}
+            </section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Pricing</h2>
+              <table className="proposal-pricing"><tbody>{data.lineItems.map((item, index) => <tr key={index}><td>{item.description || "Item"}</td><td>{data.currency} {item.amount || "0"}</td></tr>)}</tbody></table>
+              <div className="proposal-total"><span>Total</span><span>{data.currency} {total.toLocaleString()}</span></div>
+            </section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Payment Terms</h2><p className="proposal-copy">{data.paymentTerms || "[Payment terms]"}</p></section>
+            <section className="proposal-section"><h2 className="proposal-section-title">Next Steps</h2><p className="proposal-copy">{data.nextSteps || "[Next steps]"}</p></section>
+          </article>
         </div>
       )}
     </div>

@@ -18,82 +18,82 @@ const templates: Template[] = [
   {
     type: "follow-up",
     label: "Follow-Up",
-    icon: "📬",
+    icon: "",
     fields: ["recipientName", "subject", "previousDate", "keyPoint"],
     templates: {
       formal: "Dear {recipientName},\n\nI am writing to follow up on our discussion regarding {subject} on {previousDate}.\n\nAs discussed, {keyPoint}. I would appreciate the opportunity to continue our conversation and address any outstanding items.\n\nPlease let me know your availability at your earliest convenience.\n\nYours sincerely,\n[Your Name]",
       professional: "Hi {recipientName},\n\nI wanted to follow up on our conversation about {subject} from {previousDate}.\n\nTo recap, {keyPoint}. I'd love to keep the momentum going and discuss next steps.\n\nLooking forward to hearing from you.\n\nBest regards,\n[Your Name]",
       casual: "Hey {recipientName},\n\nJust circling back on {subject} from {previousDate}.\n\nQuick reminder: {keyPoint}. Let me know if you have any updates or if there's anything I can help with.\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! 👋\n\nHope you're doing well! I wanted to touch base about {subject} — we last chatted on {previousDate}.\n\nJust a heads up: {keyPoint}. No rush at all, just whenever you get a chance!\n\nTalk soon,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nHope you're doing well! I wanted to touch base about {subject} — we last chatted on {previousDate}.\n\nJust a heads up: {keyPoint}. No rush at all, just whenever you get a chance!\n\nTalk soon,\n[Your Name]",
     },
   },
   {
     type: "inquiry",
     label: "Inquiry",
-    icon: "❓",
+    icon: "",
     fields: ["recipientName", "company", "topic", "specificQuestion"],
     templates: {
       formal: "Dear {recipientName},\n\nI am writing to inquire about {topic} at {company}.\n\n{specificQuestion}\n\nI would be most grateful for any information you could provide. Please do not hesitate to contact me should you require any further details.\n\nYours faithfully,\n[Your Name]",
       professional: "Hi {recipientName},\n\nI'm reaching out to learn more about {topic} at {company}.\n\n{specificQuestion}\n\nAny information you can share would be greatly appreciated.\n\nBest regards,\n[Your Name]",
       casual: "Hey {recipientName},\n\nI'm curious about {topic} at {company}.\n\n{specificQuestion}\n\nWould love to hear back when you get a chance.\n\nThanks,\n[Your Name]",
-      friendly: "Hi {recipientName}! 😊\n\nI've been looking into {topic} at {company} and had a quick question.\n\n{specificQuestion}\n\nTotally understand if it takes a bit to get back — no pressure!\n\nThanks so much,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nI've been looking into {topic} at {company} and had a quick question.\n\n{specificQuestion}\n\nTotally understand if it takes a bit to get back — no pressure!\n\nThanks so much,\n[Your Name]",
     },
   },
   {
     type: "reminder",
     label: "Reminder",
-    icon: "⏰",
+    icon: "",
     fields: ["recipientName", "task", "deadline", "context"],
     templates: {
       formal: "Dear {recipientName},\n\nThis is a courteous reminder regarding {task}, which is due by {deadline}.\n\n{context}\n\nKindly ensure this is completed by the specified date. Should you require any assistance, please do not hesitate to reach out.\n\nBest regards,\n[Your Name]",
       professional: "Hi {recipientName},\n\nJust a friendly reminder that {task} is due by {deadline}.\n\n{context}\n\nPlease let me know if you have any questions or need support.\n\nThanks,\n[Your Name]",
       casual: "Hey {recipientName},\n\nQuick reminder — {task} is due {deadline}.\n\n{context}\n\nLet me know if you need anything!\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! ⏰\n\nJust a gentle nudge about {task} — the deadline is {deadline}.\n\n{context}\n\nNo worries if you need more time, just give me a heads up!\n\nThanks,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nJust a gentle nudge about {task} — the deadline is {deadline}.\n\n{context}\n\nNo worries if you need more time, just give me a heads up!\n\nThanks,\n[Your Name]",
     },
   },
   {
     type: "cover-letter",
     label: "Cover Letter",
-    icon: "📝",
+    icon: "",
     fields: ["recipientName", "company", "role", "keySkill", "achievement"],
     templates: {
       formal: "Dear {recipientName},\n\nI am writing to express my keen interest in the {role} position at {company}.\n\nWith my expertise in {keySkill}, I am confident in my ability to contribute meaningfully to your team. {achievement}\n\nI would welcome the opportunity to discuss how my background aligns with your needs.\n\nYours sincerely,\n[Your Name]",
       professional: "Hi {recipientName},\n\nI'm excited to apply for the {role} position at {company}.\n\nMy background in {keySkill} has prepared me well for this role. {achievement}\n\nI'd love the chance to discuss how I can contribute to your team.\n\nBest regards,\n[Your Name]",
       casual: "Hey {recipientName},\n\nI saw the {role} opening at {company} and it looks like a great fit.\n\nI bring strong {keySkill} skills to the table. {achievement}\n\nWould love to chat more about it.\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! 🙌\n\nI came across the {role} role at {company} and got really excited!\n\nI'm passionate about {keySkill} and think I could bring real value. {achievement}\n\nWould be awesome to connect and learn more!\n\nWarmly,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nI came across the {role} role at {company} and got really excited!\n\nI'm passionate about {keySkill} and think I could bring real value. {achievement}\n\nWould be awesome to connect and learn more!\n\nWarmly,\n[Your Name]",
     },
   },
   {
     type: "thank-you",
     label: "Thank You",
-    icon: "🙏",
+    icon: "",
     fields: ["recipientName", "occasion", "specificThanks"],
     templates: {
       formal: "Dear {recipientName},\n\nI wish to extend my sincere gratitude for {occasion}.\n\n{specificThanks}\n\nYour generosity and support are truly appreciated.\n\nWith warm regards,\n[Your Name]",
       professional: "Hi {recipientName},\n\nThank you so much for {occasion}.\n\n{specificThanks}\n\nI really appreciate your time and support.\n\nBest regards,\n[Your Name]",
       casual: "Hey {recipientName},\n\nThanks for {occasion}!\n\n{specificThanks}\n\nReally appreciate it.\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! 💛\n\nJust wanted to say a big THANK YOU for {occasion}!\n\n{specificThanks}\n\nYou're the best!\n\nWith gratitude,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nJust wanted to say a big THANK YOU for {occasion}!\n\n{specificThanks}\n\nYou're the best!\n\nWith gratitude,\n[Your Name]",
     },
   },
   {
     type: "introduction",
     label: "Introduction",
-    icon: "👋",
+    icon: "",
     fields: ["recipientName", "yourRole", "company", "purpose"],
     templates: {
       formal: "Dear {recipientName},\n\nAllow me to introduce myself. I am [Your Name], {yourRole} at {company}.\n\n{purpose}\n\nI look forward to the possibility of working together.\n\nYours sincerely,\n[Your Name]",
       professional: "Hi {recipientName},\n\nI'm [Your Name], {yourRole} at {company}.\n\n{purpose}\n\nI'd love to connect and explore potential collaboration.\n\nBest regards,\n[Your Name]",
       casual: "Hey {recipientName},\n\nI'm [Your Name] — {yourRole} at {company}.\n\n{purpose}\n\nLet's chat sometime!\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! 👋\n\nI'm [Your Name], and I'm a {yourRole} at {company}.\n\n{purpose}\n\nWould love to get to know you better — let's connect!\n\nWarmly,\n[Your Name]",
+      friendly: "Hi {recipientName}! \n\nI'm [Your Name], and I'm a {yourRole} at {company}.\n\n{purpose}\n\nWould love to get to know you better — let's connect!\n\nWarmly,\n[Your Name]",
     },
   },
 ];
 
 const tones: { value: Tone; label: string }[] = [
-  { value: "formal", label: "🎩 Formal" },
-  { value: "professional", label: "💼 Professional" },
-  { value: "casual", label: "☕ Casual" },
-  { value: "friendly", label: "😊 Friendly" },
+  { value: "formal", label: " Formal" },
+  { value: "professional", label: " Professional" },
+  { value: "casual", label: " Casual" },
+  { value: "friendly", label: " Friendly" },
 ];
 
 const fieldLabels: Record<string, string> = {
@@ -155,7 +155,7 @@ export default function StructuredCommunicationBuilder() {
                   : "border-border bg-surface text-muted hover:text-foreground hover:border-border-hover"
               }`}
             >
-              {t.icon} {t.label}
+              {t.label}
             </button>
           ))}
         </div>

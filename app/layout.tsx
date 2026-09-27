@@ -5,7 +5,6 @@ import { Navbar } from "./components/navbar";
 import { Footer } from "./components/footer";
 import { Sidebar } from "./components/sidebar";
 import { MobileTabBar } from "./components/mobile-tab-bar";
-import { MobileDownloadLanding } from "./components/mobile-download-landing";
 import { SplashScreen } from "./components/splash-screen";
 import { tools } from "@/lib/tools";
 
@@ -52,11 +51,12 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: detectInstalledApp }} />
+        {/* Older cached stylesheets hide the toolkit on mobile web. */}
+        <style>{`.dokit-system-shell { display: contents !important; }`}</style>
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <SplashScreen />
-          <MobileDownloadLanding />
           <div className="dokit-system-shell">
             <Sidebar />
             <Navbar />

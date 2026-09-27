@@ -31,7 +31,6 @@ export function KitToolGrid({ tools }: { tools: Tool[] }) {
         </div>
       ) : (
         <div className="rounded-xl border border-dashed border-border py-12 text-center">
-          <div className="text-3xl">🔍</div>
           <p className="mt-2 font-medium">No tools found in this kit</p>
           <button type="button" onClick={() => setSearch("")} className="mt-3 text-sm font-medium text-accent underline underline-offset-4">Clear search</button>
         </div>

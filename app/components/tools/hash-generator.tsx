@@ -90,7 +90,7 @@ export default function HashGenerator() {
                   <span className="text-xs text-muted">{results[algo]?.length || 0} chars</span>
                   <button onClick={() => handleCopy(results[algo], algo)}
                     className="rounded px-2 py-1 text-xs text-muted hover:text-foreground transition-colors">
-                    {copied === algo ? "✓ Copied" : "📋"}
+                    {copied === algo ? "✓ Copied" : "Copy"}
                   </button>
                 </div>
               </div>

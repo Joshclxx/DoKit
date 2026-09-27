@@ -135,9 +135,9 @@ export default function CapstoneIdeaBuilder() {
             <span className="text-xs font-semibold uppercase tracking-wider text-muted">Generated Concept</span>
             <div className="flex gap-2">
               <button onClick={async () => { await copyToClipboard(output); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
               <button onClick={() => downloadFile(output, `capstone-${(data.customDomain || data.domain || "concept").toLowerCase().replace(/\s+/g, "-")}.md`, "text/markdown")}
-                className="text-xs text-muted hover:text-foreground">💾</button>
+                className="text-xs text-muted hover:text-foreground">Download</button>
             </div>
           </div>
           <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap max-h-[75vh] overflow-y-auto">{output}</pre>

@@ -125,7 +125,7 @@ export default function PasswordGenerator() {
       {/* Generate button */}
       <button onClick={generate} disabled={poolSize === 0}
         className="w-full rounded-lg bg-accent py-3 text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 transition-all hover:bg-accent-hover hover:-translate-y-0.5 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40 disabled:transform-none">
-        🔒 Generate Passwords
+         Generate Passwords
       </button>
       {poolSize === 0 && (
         <p className="text-sm text-danger" role="alert">
@@ -141,7 +141,7 @@ export default function PasswordGenerator() {
               <span className="flex-1 font-mono text-sm break-all select-all">{pw}</span>
               <button onClick={() => handleCopy(pw, i)}
                 className="shrink-0 rounded px-2 py-1 text-xs text-muted hover:text-foreground transition-colors">
-                {copied === i ? "✓" : "📋"}
+                {copied === i ? "✓" : "Copy"}
               </button>
             </div>
           ))}

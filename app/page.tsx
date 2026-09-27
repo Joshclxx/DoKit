@@ -61,17 +61,14 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-px bg-border sm:grid-cols-3">
           {[
             {
-              icon: "🔒",
               title: "Local First",
               desc: "Most transformations stay in your browser. Network-enabled tools are clearly identified.",
             },
             {
-              icon: "⚡",
               title: "Instant Access",
               desc: "No account is required, and local tools work without sending your content to a server.",
             },
             {
-              icon: "🧰",
               title: `${tools.length} Tools, 5 Kits`,
               desc: "Text, data, media, developer, and business tools in one place.",
             },
@@ -80,7 +77,6 @@ export default function Home() {
               key={feature.title}
               className="flex flex-col gap-2 bg-background p-8 sm:p-10"
             >
-              <span className="text-2xl">{feature.icon}</span>
               <h3 className="text-lg font-semibold">{feature.title}</h3>
               <p className="text-sm text-muted">{feature.desc}</p>
             </div>

@@ -73,7 +73,6 @@ export default function ImageCompressor() {
         {/* Drop zone */}
         <div onDrop={handleDrop} onDragOver={(e) => e.preventDefault()} onClick={() => inputRef.current?.click()}
           className="flex min-h-52 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface/50 p-8 text-center transition-colors hover:border-accent hover:bg-accent/5">
-          <span className="mb-2 text-3xl">🖼️</span>
           <span className="text-sm font-medium">{processing ? "Processing…" : "Drop images here or click to browse"}</span>
           <span className="mt-1 text-xs text-muted">JPG, PNG, WebP, GIF · processed locally</span>
           <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={(e) => e.target.files && compress(e.target.files)} />

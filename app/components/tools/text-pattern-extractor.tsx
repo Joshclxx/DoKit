@@ -10,12 +10,12 @@ interface PatternPreset {
 }
 
 const presets: PatternPreset[] = [
-  { label: "📧 Email", regex: "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}", flags: "gi" },
-  { label: "🔗 URL", regex: "https?:\\/\\/[^\\s\"'<>]+", flags: "gi" },
-  { label: "📞 Phone", regex: "\\+?[\\d][\\d\\-().\\s]{6,}\\d", flags: "g" },
-  { label: "📅 Date", regex: "\\d{1,4}[\\-/.]\\d{1,2}[\\-/.]\\d{1,4}", flags: "g" },
-  { label: "🌐 IPv4", regex: "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b", flags: "g" },
-  { label: "🔢 Number", regex: "-?\\d+\\.?\\d*", flags: "g" },
+  { label: " Email", regex: "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}", flags: "gi" },
+  { label: " URL", regex: "https?:\\/\\/[^\\s\"'<>]+", flags: "gi" },
+  { label: " Phone", regex: "\\+?[\\d][\\d\\-().\\s]{6,}\\d", flags: "g" },
+  { label: " Date", regex: "\\d{1,4}[\\-/.]\\d{1,2}[\\-/.]\\d{1,4}", flags: "g" },
+  { label: " IPv4", regex: "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b", flags: "g" },
+  { label: " Number", regex: "-?\\d+\\.?\\d*", flags: "g" },
 ];
 
 export default function TextPatternExtractor() {
@@ -199,7 +199,7 @@ export default function TextPatternExtractor() {
                   className="ml-3 shrink-0 rounded px-2 py-1 text-xs text-muted hover:bg-surface-hover hover:text-foreground transition-colors"
                   title="Copy"
                 >
-                  📋
+                  Copy
                 </button>
               </div>
             ))}

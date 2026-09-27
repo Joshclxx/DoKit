@@ -114,7 +114,7 @@ export default function YouTubeVideoInspector() {
                     </div>
                     <button onClick={() => copy(info.thumbnails[t.key], t.key)}
                       className="rounded px-2 py-1 text-xs text-muted hover:text-foreground">
-                      {copied === t.key ? "✓" : "📋"}
+                      {copied === t.key ? "✓" : "Copy"}
                     </button>
                   </div>
                 </div>
@@ -136,7 +136,7 @@ export default function YouTubeVideoInspector() {
             <div className="mb-2 flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted">Embed Code</span>
               <button onClick={() => copy(embedCode, "embed")} className="text-xs text-muted hover:text-foreground">
-                {copied === "embed" ? "✓ Copied" : "📋 Copy"}
+                {copied === "embed" ? "✓ Copied" : " Copy"}
               </button>
             </div>
             <pre className="rounded-lg border border-border bg-surface p-4 font-mono text-xs whitespace-pre-wrap">{embedCode}</pre>

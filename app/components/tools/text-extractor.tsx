@@ -82,7 +82,6 @@ export default function TextExtractor() {
         onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); }}
         onDragOver={(e) => e.preventDefault()}
         className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface/50 p-10 cursor-pointer transition-colors hover:border-accent hover:bg-accent/5">
-        <span className="text-3xl mb-2">📝</span>
         <span className="text-sm font-medium">{processing ? "Extracting…" : "Drop files here or click to browse"}</span>
         <span className="text-xs text-muted mt-1">PDF, TXT, Markdown, JSON, CSV, Code files, Images</span>
         <input ref={inputRef} type="file" multiple hidden accept=".pdf,.txt,.md,.csv,.json,.xml,.html,.yml,.yaml,.log,.tsx,.ts,.js,.py,.css,.sql,image/*"
@@ -115,9 +114,9 @@ export default function TextExtractor() {
               </div>
               <div className="flex gap-2">
                 <button onClick={async () => { await copyToClipboard(currentFile.text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                  className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+                  className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
                 <button onClick={() => downloadFile(currentFile.text, `extracted-${currentFile.name}.txt`)}
-                  className="text-xs text-muted hover:text-foreground">💾</button>
+                  className="text-xs text-muted hover:text-foreground">Download</button>
               </div>
             </div>
             <textarea value={currentFile.text} onChange={(e) => updateText(e.target.value)}
@@ -135,7 +134,7 @@ export default function TextExtractor() {
               <div className="rounded-lg border border-border overflow-auto max-h-[500px]">
                 <img src={imagePreview} alt="Preview" className="w-full" />
               </div>
-              <p className="mt-2 text-xs text-muted">💡 Tip: Read the text in the image and type it in the text area. For automated OCR, use an AI vision model.</p>
+              <p className="mt-2 text-xs text-muted"> Tip: Read the text in the image and type it in the text area. For automated OCR, use an AI vision model.</p>
             </div>
           )}
 

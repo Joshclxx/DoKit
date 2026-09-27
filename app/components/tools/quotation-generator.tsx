@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { copyToClipboard, downloadFile } from "@/lib/utils/download";
-import { escapeHtml } from "@/lib/utils/html";
+import { downloadHtmlPagesAsPdf, waitForPdfPreview } from "@/lib/utils/pdf-download";
+import { usePagePreviewScale } from "@/lib/hooks/use-page-preview-scale";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
 import { defaultPreferences, type DoKitPreferences } from "@/lib/preferences";
 
@@ -28,6 +29,7 @@ export default function QuotationGenerator() {
   const [preferences] = useLocalStorage<DoKitPreferences>("preferences", defaultPreferences);
   const [data, setData, dataStore] = useLocalStorage<QuoteData>("tool-quotation-generator", defaultData);
   const [tab, setTab] = useState<"edit" | "preview">("edit");
+  const { containerRef: previewViewportRef, scale: previewScale } = usePagePreviewScale(170, tab === "preview");
   const [copied, setCopied] = useState(false);
   const defaultsApplied = useRef(false);
 
@@ -78,29 +80,28 @@ export default function QuotationGenerator() {
     return lines.join("\n");
   }, [data, subtotal, tax, total, fmt]);
 
-  const handlePrint = () => {
-    const el = document.getElementById("quote-preview");
-    if (!el) return;
-    const win = window.open("", "_blank");
-    if (!win) return;
-    win.document.write(`<!DOCTYPE html><html><head><title>Quotation ${escapeHtml(data.quoteNumber)}</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Courier New',Courier,monospace;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:40px 60px;color:#222;white-space:pre-wrap;font-size:14px;line-height:1.7}
-@media print{@page{margin:16mm 20mm}body{margin:0;padding:0}}
-</style></head><body>${el.innerHTML}</body></html>`);
-    win.document.close();
-    setTimeout(() => { win.print(); win.close(); }, 400);
+  const handleExport = async () => {
+    if (tab !== "preview") {
+      setTab("preview");
+      await waitForPdfPreview();
+    }
+    try {
+      const preview = document.querySelector<HTMLElement>("#quote-preview .quote-sheet");
+      if (!preview) throw new Error("Quotation preview is unavailable.");
+      await downloadHtmlPagesAsPdf([preview], `${data.quoteNumber || "quotation"}.pdf`, { marginsMm: [16, 20, 16, 20] });
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    }
   };
 
   return (
     <div className="space-y-6">
-      <div className="tool-action-bar flex items-center justify-between gap-2">
+      <div className="tool-action-bar document-action-bar flex items-center justify-between gap-2">
         <div className="flex rounded-lg border border-border bg-surface p-1">
           {(["edit", "preview"] as const).map((t) => (
             <button key={t} onClick={() => setTab(t)}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${tab === t ? "bg-accent text-accent-fg" : "text-muted hover:text-foreground"}`}>
-              {t === "edit" ? "✏️ Edit" : "👁 Preview"}
+              {t === "edit" ? " Edit" : " Preview"}
             </button>
           ))}
         </div>
@@ -109,8 +110,8 @@ body{font-family:'Courier New',Courier,monospace;-webkit-print-color-adjust:exac
             className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:bg-surface-hover">{copied ? "✓" : "Copy"}</button>
           <button onClick={() => downloadFile(quoteText, `${data.quoteNumber}.txt`)}
             className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium hover:bg-surface-hover">Export</button>
-          <button onClick={handlePrint}
-            className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg hover:bg-accent-hover">🖨 PDF</button>
+          <button onClick={handleExport}
+            className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg hover:bg-accent-hover">Export PDF</button>
         </div>
       </div>
 
@@ -178,7 +179,47 @@ body{font-family:'Courier New',Courier,monospace;-webkit-print-color-adjust:exac
           </div>
         </div>
       ) : (
-        <div id="quote-preview" className="rounded-lg border border-border bg-surface p-6 sm:p-8 whitespace-pre-wrap font-mono text-sm leading-relaxed">{quoteText}</div>
+        <div ref={previewViewportRef} id="quote-preview" className="max-w-full overflow-hidden rounded-lg border border-border" style={{ background: "#fff", color: "#222" }}>
+          <style>{`
+            .quote-sheet{box-sizing:border-box;width:170mm;max-width:none;margin:0 auto;padding:32px;background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;overflow-wrap:anywhere}
+            .quote-header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding-bottom:20px;border-bottom:2px solid #085041}
+            .quote-title{margin:0;color:#085041;font-size:30px;letter-spacing:.04em}
+            .quote-number{margin-top:6px;color:#666;font-size:14px}
+            .quote-dates{text-align:right;color:#555;font-size:14px;line-height:1.7}
+            .quote-parties{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0}
+            .quote-party-label{margin:0 0 8px;color:#085041;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+            .quote-party p{margin:3px 0;font-size:14px}
+            .quote-items{width:100%;border-collapse:collapse;margin:28px 0 20px;font-size:13px}
+            .quote-items th{padding:10px 8px;background:#085041;color:white;text-align:left}
+            .quote-items td{padding:10px 8px;border-bottom:1px solid #ddd;vertical-align:top}
+            .quote-items .numeric{text-align:right;white-space:nowrap}
+            .quote-totals{width:280px;margin:18px 0 0 auto;font-size:14px}
+            .quote-total-row{display:flex;justify-content:space-between;gap:16px;padding:5px 0}
+            .quote-grand-total{margin-top:6px;padding-top:10px;border-top:1px solid #085041;color:#085041;font-size:18px;font-weight:700}
+            .quote-notes{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:13px;line-height:1.6}
+            .quote-notes-label{margin:0 0 6px;color:#085041;font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+          `}</style>
+          <div className="quote-sheet" style={{ zoom: previewScale }}>
+            <header className="quote-header">
+              <div><h1 className="quote-title">QUOTATION</h1><p className="quote-number">{data.quoteNumber}</p></div>
+              <div className="quote-dates"><p>Date: {data.date}</p>{data.validUntil && <p>Valid until: {data.validUntil}</p>}</div>
+            </header>
+            <section className="quote-parties">
+              <div className="quote-party"><h2 className="quote-party-label">From</h2><p><strong>{data.fromName || "[Name]"}</strong></p>{data.fromCompany && <p>{data.fromCompany}</p>}{data.fromEmail && <p>{data.fromEmail}</p>}</div>
+              <div className="quote-party"><h2 className="quote-party-label">To</h2><p><strong>{data.toName || "[Name]"}</strong></p>{data.toCompany && <p>{data.toCompany}</p>}{data.toEmail && <p>{data.toEmail}</p>}</div>
+            </section>
+            <table className="quote-items">
+              <thead><tr><th>Description</th><th className="numeric">Qty</th><th className="numeric">Unit Price</th><th className="numeric">Amount</th></tr></thead>
+              <tbody>{data.items.map((item, index) => <tr key={index}><td>{item.description || "Item"}</td><td className="numeric">{item.quantity}</td><td className="numeric">{fmt(item.unitPrice)}</td><td className="numeric">{fmt(item.quantity * item.unitPrice)}</td></tr>)}</tbody>
+            </table>
+            <section className="quote-totals">
+              <div className="quote-total-row"><span>Subtotal</span><span>{fmt(subtotal)}</span></div>
+              {data.taxRate > 0 && <div className="quote-total-row"><span>Tax ({data.taxRate}%)</span><span>{fmt(tax)}</span></div>}
+              <div className="quote-total-row quote-grand-total"><strong>Total</strong><strong>{fmt(total)}</strong></div>
+            </section>
+            {data.notes && <section className="quote-notes"><h2 className="quote-notes-label">Notes</h2><p>{data.notes}</p></section>}
+          </div>
+        </div>
       )}
     </div>
   );

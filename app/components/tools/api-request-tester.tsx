@@ -88,17 +88,17 @@ export default function ApiRequestTester() {
   return (
     <div className="space-y-5">
       {/* URL bar */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 sm:flex">
         <select value={method} onChange={(e) => setMethod(e.target.value as Method)}
-          className="h-10 w-28 shrink-0 rounded-lg border border-border bg-surface px-2 text-sm font-bold focus:border-accent focus:outline-none">
+          className="col-start-1 row-start-2 h-10 w-full rounded-lg border border-border bg-surface px-2 text-sm font-bold focus:border-accent focus:outline-none sm:row-start-auto sm:w-28 sm:shrink-0">
           {methods.map((m) => <option key={m}>{m}</option>)}
         </select>
         <input type="text" value={url} onChange={(e) => setUrl(e.target.value)}
           placeholder="https://api.example.com/endpoint"
-          className="h-10 flex-1 rounded-lg border border-border bg-surface px-3 font-mono text-sm focus:border-accent focus:outline-none"
+          className="col-span-2 row-start-1 h-10 min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 font-mono text-sm focus:border-accent focus:outline-none sm:col-span-1 sm:row-start-auto"
           onKeyDown={(e) => e.key === "Enter" && send()} />
         <button onClick={send} disabled={loading || !url.trim()}
-          className="h-10 rounded-lg bg-accent px-5 text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 transition-all hover:bg-accent-hover disabled:opacity-50">
+          className="col-start-2 row-start-2 h-10 rounded-lg bg-accent px-5 text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 transition-all hover:bg-accent-hover disabled:opacity-50 sm:row-start-auto">
           {loading ? "…" : "Send"}
         </button>
       </div>
@@ -120,11 +120,11 @@ export default function ApiRequestTester() {
           {activeTab === "headers" && (
             <div className="space-y-2">
               {headers.map((h, i) => (
-                <div key={i} className="flex items-center gap-2">
+                <div key={i} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto]">
                   <input type="checkbox" checked={h.enabled} onChange={(e) => updateHeader(i, "enabled", e.target.checked)} className="h-4 w-4 accent-accent" />
                   <input type="text" placeholder="Key" value={h.key} onChange={(e) => updateHeader(i, "key", e.target.value)} className={inp} />
-                  <input type="text" placeholder="Value" value={h.value} onChange={(e) => updateHeader(i, "value", e.target.value)} className={inp} />
-                  <button onClick={() => rmHeader(i)} className="text-muted hover:text-danger text-sm">✕</button>
+                  <input type="text" placeholder="Value" value={h.value} onChange={(e) => updateHeader(i, "value", e.target.value)} className={`${inp} col-span-2 col-start-2 row-start-2 sm:col-span-1 sm:col-start-auto sm:row-start-auto`} />
+                  <button onClick={() => rmHeader(i)} className="col-start-3 row-start-1 text-sm text-muted hover:text-danger sm:col-start-auto sm:row-start-auto">✕</button>
                 </div>
               ))}
               <button onClick={addHeader} className="text-xs text-muted hover:text-accent">+ Add Header</button>
@@ -133,11 +133,11 @@ export default function ApiRequestTester() {
           {activeTab === "params" && (
             <div className="space-y-2">
               {params.map((p, i) => (
-                <div key={i} className="flex items-center gap-2">
+                <div key={i} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto]">
                   <input type="checkbox" checked={p.enabled} onChange={(e) => updateParam(i, "enabled", e.target.checked)} className="h-4 w-4 accent-accent" />
                   <input type="text" placeholder="Key" value={p.key} onChange={(e) => updateParam(i, "key", e.target.value)} className={inp} />
-                  <input type="text" placeholder="Value" value={p.value} onChange={(e) => updateParam(i, "value", e.target.value)} className={inp} />
-                  <button onClick={() => rmParam(i)} className="text-muted hover:text-danger text-sm">✕</button>
+                  <input type="text" placeholder="Value" value={p.value} onChange={(e) => updateParam(i, "value", e.target.value)} className={`${inp} col-span-2 col-start-2 row-start-2 sm:col-span-1 sm:col-start-auto sm:row-start-auto`} />
+                  <button onClick={() => rmParam(i)} className="col-start-3 row-start-1 text-sm text-muted hover:text-danger sm:col-start-auto sm:row-start-auto">✕</button>
                 </div>
               ))}
               <button onClick={addParam} className="text-xs text-muted hover:text-accent">+ Add Param</button>
@@ -165,7 +165,7 @@ export default function ApiRequestTester() {
               <span className="text-xs text-muted">{(response.size / 1024).toFixed(1)} KB</span>
             </div>
             <button onClick={async () => { await copyToClipboard(formatBody(response.body)); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-              className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+              className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
           </div>
           <div className="flex border-b border-border">
             {(["body", "headers"] as const).map((t) => (

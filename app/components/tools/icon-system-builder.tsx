@@ -128,7 +128,7 @@ export default function IconSystemBuilder() {
               <span className="mt-1.5 text-[9px] text-muted truncate w-full text-center">{icon.label}</span>
               <button onClick={(e) => { e.stopPropagation(); copy(genSvg(key, icon), key); }}
                 className="absolute top-0.5 right-0.5 opacity-0 group-hover:opacity-100 text-[10px] text-muted hover:text-foreground p-1">
-                {copied === key ? "✓" : "📋"}
+                {copied === key ? "✓" : "Copy"}
               </button>
             </div>
           );

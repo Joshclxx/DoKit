@@ -25,32 +25,32 @@ function decodeByteSequence(input: string, radix: 2 | 16): string {
 
 const codecs: CodecDef[] = [
   {
-    id: "base64", label: "Base64", icon: "🔤",
+    id: "base64", label: "Base64", icon: "",
     encode: (s) => btoa(unescape(encodeURIComponent(s))),
     decode: (s) => decodeURIComponent(escape(atob(s.trim()))),
   },
   {
-    id: "url", label: "URL", icon: "🔗",
+    id: "url", label: "URL", icon: "",
     encode: (s) => encodeURIComponent(s),
     decode: (s) => decodeURIComponent(s),
   },
   {
-    id: "html", label: "HTML Entities", icon: "🏷",
+    id: "html", label: "HTML Entities", icon: "",
     encode: (s) => s.replace(/[&<>"']/g, (c) => htmlEntities[c] || c),
     decode: (s) => s.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, (e) => htmlDecode[e] || e),
   },
   {
-    id: "hex", label: "Hex", icon: "🔢",
+    id: "hex", label: "Hex", icon: "",
     encode: (s) => Array.from(new TextEncoder().encode(s)).map((b) => b.toString(16).padStart(2, "0")).join(" "),
     decode: (s) => decodeByteSequence(s, 16),
   },
   {
-    id: "binary", label: "Binary", icon: "💾",
+    id: "binary", label: "Binary", icon: "",
     encode: (s) => Array.from(new TextEncoder().encode(s)).map((b) => b.toString(2).padStart(8, "0")).join(" "),
     decode: (s) => decodeByteSequence(s, 2),
   },
   {
-    id: "unicode", label: "Unicode Escape", icon: "🌐",
+    id: "unicode", label: "Unicode Escape", icon: "",
     encode: (s) => Array.from({ length: s.length }, (_, index) =>
       "\\u" + s.charCodeAt(index).toString(16).padStart(4, "0")
     ).join(""),
@@ -101,7 +101,7 @@ export default function EncoderDecoder() {
             className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
               active === c.id ? "border-accent bg-accent/10 text-accent" : "border-border bg-surface text-muted hover:text-foreground hover:border-border-hover"
             }`}>
-            {c.icon} {c.label}
+            {c.label}
           </button>
         ))}
       </div>
@@ -137,7 +137,7 @@ export default function EncoderDecoder() {
             <label className="text-sm font-medium text-muted">Output</label>
             <button onClick={handleCopy} disabled={!output}
               className="rounded px-2 py-1 text-xs text-muted hover:text-foreground disabled:opacity-40">
-              {copied ? "✓ Copied" : "📋 Copy"}
+              {copied ? "✓ Copied" : " Copy"}
             </button>
           </div>
           <textarea value={error ? `Error: ${error}` : output} readOnly rows={8}

@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 export default function ToolsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">All Tools</h1>
-        <p className="mt-2 text-muted">
+    <div className="mx-auto max-w-7xl px-4 pb-6 pt-4 sm:px-6 sm:py-10 lg:px-8">
+      <div className="mb-5 sm:mb-8">
+        <h1 className="sr-only font-bold tracking-tight md:not-sr-only md:text-3xl">All Tools</h1>
+        <p className="text-sm leading-6 text-muted md:mt-2 md:text-base">
           {tools.length} browser-native tools — pick one and get to work.
         </p>
       </div>

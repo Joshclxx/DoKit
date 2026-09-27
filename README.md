@@ -1,6 +1,6 @@
 # DoKit
 
-DoKit is a browser-native productivity toolkit with 44 tools for documents, text, developer workflows, calculations, and media. Most tools process data locally. The API tester, QR renderer, and YouTube preview explicitly disclose when data or assets use the network.
+DoKit is a browser-native productivity toolkit with 40 tools for documents, text, developer workflows, calculations, and media. Most tools process data locally. The API tester, QR renderer, and YouTube preview explicitly disclose when data or assets use the network.
 
 ## Run locally
 
@@ -13,17 +13,15 @@ yarn dev
 
 Open `http://localhost:3000`.
 
-## Mobile Android handoff
+## Mobile web and Android app
 
-Every phone-sized browser visit shows a single Android download page instead of the web tool system. The full responsive mobile interface is reserved for the installed app. To enable the APK download button, provide the signed build URL at build time:
+The mobile website provides the responsive toolkit. Its Settings screen links to the current Android APK. The link defaults to `/downloads/dokit-android-v1.0.3-debug.apk`; to serve an APK from another location, set the URL at build time:
 
 ```bash
 NEXT_PUBLIC_ANDROID_APK_URL=https://example.com/dokit.apk yarn build
 ```
 
-Without that value, the download control remains disabled instead of linking to a missing file.
-
-The installed app can expose the full mobile system by using the `DoKitApp` user-agent marker. Standalone display mode and native Capacitor runtimes are also recognized.
+The installed app uses the `DoKitApp` user-agent marker. Standalone display mode and native Capacitor runtimes are also recognized.
 
 The `/settings` screen manages theme, reusable business defaults, default currency, local JSON export, and saved-draft cleanup.
 
@@ -48,7 +46,7 @@ yarn android:sync
 yarn android:apk
 ```
 
-The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk` and copied to `public/downloads/dokit-android-v1.0.2-debug.apk` for the mobile website download button. Use `yarn android:open` to open the native project in Android Studio. The Capacitor WebView appends `DoKitApp/1.0.2` to its user agent so the installed app receives the full mobile system instead of the browser download handoff.
+The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk` and copied to `public/downloads/dokit-android-v1.0.3-debug.apk` for the mobile website download button. Use `yarn android:open` to open the native project in Android Studio. The Capacitor WebView appends `DoKitApp/1.0.3` to its user agent.
 
 ## Product limits
 

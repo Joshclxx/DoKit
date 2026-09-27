@@ -116,7 +116,7 @@ export function SettingsPanel() {
 
       <section>
         <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">About</h2>
-        <div className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-4 text-sm"><span>Version</span><span className="text-muted">1.0.2</span></div>
+        <div className="flex items-center justify-between rounded-xl border border-border bg-surface px-4 py-4 text-sm"><span>Version</span><span className="text-muted">1.0.3</span></div>
       </section>
     </div>
   );

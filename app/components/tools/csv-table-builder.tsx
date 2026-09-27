@@ -234,7 +234,7 @@ export default function CSVTableBuilder() {
               </button>
               <button onClick={() => handleCopy(fmt)}
                 className="border-l border-border px-2 py-1.5 text-xs text-muted hover:text-foreground hover:bg-surface-hover transition-colors">
-                {copied ? "✓" : "📋"}
+                {copied ? "✓" : "Copy"}
               </button>
             </div>
           ))}

@@ -2,6 +2,7 @@ import { getKitBySlug, getKitTools, kits } from "@/lib/kits";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { KitToolGrid } from "@/app/components/kit-tool-grid";
+import { BackButton } from "@/app/components/back-button";
 
 export function generateStaticParams() {
   return kits.map((k) => ({ slug: k.slug }));
@@ -26,20 +27,18 @@ export default async function KitPage(props: PageProps<"/kits/[slug]">) {
   const kitTools = getKitTools(kit);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 pb-6 pt-4 sm:px-6 sm:py-10 lg:px-8">
       {/* Breadcrumb */}
-      <nav className="mb-6 flex items-center gap-2 text-sm text-muted">
-        <Link href="/tools" className="transition-colors hover:text-foreground">
-          Tools
-        </Link>
+      <nav className="mb-6 hidden items-center gap-2 text-sm text-muted md:flex" aria-label="Breadcrumb">
+        <BackButton fallbackHref="/kits" />
         <span>/</span>
         <span className="text-foreground">{kit.name}</span>
       </nav>
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">{kit.name}</h1>
-        <p className="mt-2 text-muted">{kit.description}</p>
+      <div className="mb-5 sm:mb-8">
+        <h1 className="sr-only font-bold tracking-tight md:not-sr-only md:text-3xl">{kit.name}</h1>
+        <p className="text-sm leading-6 text-muted md:mt-2 md:text-base">{kit.description}</p>
         <p className="mt-1 text-sm text-muted">
           {kitTools.length} tools in this kit
         </p>

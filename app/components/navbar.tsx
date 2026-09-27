@@ -2,46 +2,39 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useTheme } from "./theme-provider";
-import { useState } from "react";
-
-const kits = [
-  { name: "Freelance & Business", slug: "freelance-business" },
-  { name: "Certificates & Docs", slug: "certificates-documents" },
-  { name: "Developer Tools", slug: "developer-tools" },
-  { name: "Data & Text", slug: "data-text" },
-  { name: "Media & Assets", slug: "media-assets" },
-];
+import { getToolBySlug } from "@/lib/tools";
+import { getKitBySlug } from "@/lib/kits";
+import { BackButton } from "./back-button";
 
 export function Navbar() {
   const { resolvedTheme, toggle } = useTheme();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const tool = pathname.startsWith("/tools/") ? getToolBySlug(pathname.slice("/tools/".length)) : undefined;
+  const kit = pathname.startsWith("/kits/") ? getKitBySlug(pathname.slice("/kits/".length)) : undefined;
+  const isDetailPage = Boolean(tool || kit);
+  const title = tool?.name ?? kit?.name ?? (pathname === "/tools" ? "All Tools" : pathname === "/kits" ? "Kits" : pathname === "/settings" ? "Settings" : "");
+  const fallbackHref = tool ? "/tools" : kit ? "/kits" : "/";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-surface/90 backdrop-blur-xl md:hidden">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center"
-        >
-          <Image
-            src="/dokit_logo_title.svg"
-            alt="DoKit"
-            width={138}
-            height={41}
-            priority
-            className="h-10 w-auto"
-          />
-        </Link>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          {/* Theme Toggle */}
+    <header className="sticky top-0 z-50 border-b border-border bg-surface/95 pt-[env(safe-area-inset-top)] backdrop-blur-xl md:hidden">
+      <nav className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-3 sm:px-6" aria-label="App navigation">
+        {title ? (
+          <>
+            {isDetailPage && <BackButton fallbackHref={fallbackHref} iconOnly />}
+            <span className={`min-w-0 flex-1 truncate text-base font-semibold ${isDetailPage ? "" : "pl-2"}`}>{title}</span>
+          </>
+        ) : (
+          <Link href="/" className="flex min-w-0 flex-1 items-center" aria-label="DoKit home">
+            <Image src="/dokit_logo_title.svg" alt="DoKit" width={138} height={41} priority className="h-9 w-auto" />
+          </Link>
+        )}
+        <div className="flex shrink-0 items-center">
           <button
             onClick={toggle}
             aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
           >
             {resolvedTheme === "dark" ? (
               <svg
@@ -71,45 +64,8 @@ export function Navbar() {
             )}
           </button>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-          >
-            <svg
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              {menuOpen ? (
-                <path d="M18 6 6 18M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
         </div>
       </nav>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="border-t border-border bg-surface px-4 pb-4 pt-2">
-          {kits.map((kit) => (
-            <Link
-              key={kit.slug}
-              href={`/kits/${kit.slug}`}
-              onClick={() => setMenuOpen(false)}
-              className="block rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
-            >
-              {kit.name}
-            </Link>
-          ))}
-        </div>
-      )}
     </header>
   );
 }

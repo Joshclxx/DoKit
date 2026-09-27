@@ -36,12 +36,12 @@ function buildPayload(c: QRConfig): string {
 }
 
 const payloadTypes: { id: PayloadType; label: string; icon: string }[] = [
-  { id: "url", label: "URL", icon: "🔗" },
-  { id: "text", label: "Text", icon: "📝" },
-  { id: "email", label: "Email", icon: "✉️" },
-  { id: "phone", label: "Phone", icon: "📞" },
-  { id: "wifi", label: "Wi-Fi", icon: "📶" },
-  { id: "vcard", label: "vCard", icon: "👤" },
+  { id: "url", label: "URL", icon: "" },
+  { id: "text", label: "Text", icon: "" },
+  { id: "email", label: "Email", icon: "" },
+  { id: "phone", label: "Phone", icon: "" },
+  { id: "wifi", label: "Wi-Fi", icon: "" },
+  { id: "vcard", label: "vCard", icon: "" },
 ];
 
 export default function QRCodeBuilder() {
@@ -71,7 +71,7 @@ export default function QRCodeBuilder() {
               <button key={t.id} onClick={() => update("type", t.id)}
                 className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                   config.type === t.id ? "border-accent bg-accent/10 text-accent" : "border-border text-muted hover:text-foreground"
-                }`}>{t.icon} {t.label}</button>
+                }`}>{t.label}</button>
             ))}
           </div>
 
@@ -131,7 +131,7 @@ export default function QRCodeBuilder() {
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted">Payload</span>
               <button onClick={async () => { await copyToClipboard(payload); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+                className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
             </div>
             <pre className="rounded-lg border border-border bg-surface p-3 font-mono text-xs whitespace-pre-wrap">{payload}</pre>
           </div>

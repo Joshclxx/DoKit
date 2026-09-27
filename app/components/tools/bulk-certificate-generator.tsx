@@ -631,7 +631,7 @@ export default function BulkCertificateGenerator() {
               <div className="h-14 w-14 rounded-lg border-2 border-dashed border-border bg-background flex items-center justify-center overflow-hidden cursor-pointer hover:border-accent transition-colors shrink-0"
                 onClick={() => logoRef.current?.click()}>
                 {logoPreview ? <img src={logoPreview} alt="" className="h-full w-full object-contain p-1" />
-                  : <span className="text-lg">🏢</span>}
+                  : null}
               </div>
               <div className="flex-1">
                 <button onClick={() => logoRef.current?.click()} className="text-xs font-medium text-accent hover:underline">

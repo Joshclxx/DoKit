@@ -30,7 +30,6 @@ export const kits: Kit[] = [
       "bulk-certificate-generator",
       "id-card-badge-generator",
       "ats-resume-builder",
-      "pdf-to-docx",
     ],
   },
   {
@@ -55,8 +54,6 @@ export const kits: Kit[] = [
       "csv-table-builder",
       "data-cleanup-suite",
       "text-pattern-extractor",
-      "bulk-file-naming",
-      "text-intelligence-analyzer",
     ],
   },
   {
@@ -65,7 +62,6 @@ export const kits: Kit[] = [
     description: "Compress images, build QR codes, create icons, remove backgrounds, and design colour systems.",
     toolSlugs: [
       "image-compressor",
-      "background-remover",
       "qr-code-builder",
       "icon-system-builder",
       "social-post-mockup-builder",

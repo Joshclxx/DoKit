@@ -201,9 +201,9 @@ export default function SvgSystemBuilder() {
           <span className="text-xs font-semibold uppercase tracking-wider text-muted">SVG Code</span>
           <div className="flex gap-2">
             <button onClick={async () => { await copyToClipboard(svgCode); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-              className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "📋"}</button>
+              className="text-xs text-muted hover:text-foreground">{copied ? "✓" : "Copy"}</button>
             <button onClick={() => downloadFile(svgCode, "design.svg", "image/svg+xml")}
-              className="text-xs text-muted hover:text-foreground">💾</button>
+              className="text-xs text-muted hover:text-foreground">Download</button>
           </div>
         </div>
         <pre className="rounded-lg border border-border bg-surface p-3 font-mono text-[10px] leading-relaxed whitespace-pre-wrap max-h-32 overflow-y-auto">{svgCode}</pre>

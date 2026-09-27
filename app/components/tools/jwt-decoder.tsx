@@ -102,7 +102,7 @@ export default function JWTDecoder() {
             )}
             {isExpired !== null && (
               <span className={`rounded-lg px-3 py-1.5 text-sm font-medium ${isExpired ? "bg-danger/10 text-danger" : "bg-success/10 text-success"}`}>
-                {isExpired ? "⚠ Expired" : "✓ Not expired (signature unverified)"}
+                {isExpired ? " Expired" : "✓ Not expired (signature unverified)"}
               </span>
             )}
           </div>
@@ -121,10 +121,10 @@ export default function JWTDecoder() {
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted">Signature</span>
                 <button onClick={() => handleCopy(decoded.signature!, "sig")}
-                  className="text-xs text-muted hover:text-foreground">{copied === "sig" ? "✓" : "📋"}</button>
+                  className="text-xs text-muted hover:text-foreground">{copied === "sig" ? "✓" : "Copy"}</button>
               </div>
               <div className="font-mono text-sm break-all text-muted">{decoded.signature}</div>
-              <p className="mt-2 text-xs text-muted">⚠ Signature verification requires the secret key and cannot be done client-side.</p>
+              <p className="mt-2 text-xs text-muted"> Signature verification requires the secret key and cannot be done client-side.</p>
             </div>
           )}
         </>
@@ -143,7 +143,7 @@ function Section({ title, data, raw, onCopy, copied, id, showClaims }: {
       <div className="mb-3 flex items-center justify-between">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted">{title}</span>
         <button onClick={() => onCopy(raw, id)}
-          className="text-xs text-muted hover:text-foreground">{copied === id ? "✓ Copied" : "📋 Copy JSON"}</button>
+          className="text-xs text-muted hover:text-foreground">{copied === id ? "✓ Copied" : " Copy JSON"}</button>
       </div>
       {showClaims ? (
         <div className="space-y-2">

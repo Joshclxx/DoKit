@@ -84,7 +84,7 @@ export function Sidebar() {
           <div className="absolute left-4 right-4 top-[4.1rem] z-20 overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--shadow-lg)]">
             {matches.length ? matches.map((tool) => (
               <Link key={tool.slug} href={`/tools/${tool.slug}`} onClick={() => setQuery("")} className="flex items-center gap-3 border-b border-border px-3 py-3 last:border-0 hover:bg-surface-hover">
-                <span>{tool.icon}</span><span className="min-w-0"><span className="block truncate text-sm font-medium">{tool.name}</span><span className="block text-xs text-muted">{tool.category}</span></span>
+                <span className="min-w-0"><span className="block truncate text-sm font-medium">{tool.name}</span><span className="block text-xs text-muted">{tool.category}</span></span>
               </Link>
             )) : <div className="px-4 py-5 text-center text-sm text-muted">No tools found</div>}
           </div>
@@ -114,15 +114,15 @@ export function Sidebar() {
             <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Jump back in</p>
             <div className="mt-2 space-y-1">
               {recentTools.map((tool) => (
-                <Link key={tool.slug} href={`/tools/${tool.slug}`} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-hover hover:text-foreground"><span>{tool.icon}</span><span className="truncate">{tool.name}</span></Link>
+                <Link key={tool.slug} href={`/tools/${tool.slug}`} className="flex items-center rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-hover hover:text-foreground"><span className="truncate">{tool.name}</span></Link>
               ))}
             </div>
           </div>
         )}
 
         <div className="mt-auto space-y-1 pt-6">
-          <Link href="/settings" className={navClass(pathname === "/settings")}><span aria-hidden>⚙</span><span>Settings</span></Link>
-          <button type="button" onClick={toggle} className={`${navClass(false)} w-full text-left`}><span aria-hidden>{resolvedTheme === "dark" ? "☀" : "☾"}</span><span>Switch to {resolvedTheme === "dark" ? "light" : "dark"}</span></button>
+          <Link href="/settings" className={navClass(pathname === "/settings")}>Settings</Link>
+          <button type="button" onClick={toggle} className={`${navClass(false)} w-full text-left`}>Switch to {resolvedTheme === "dark" ? "light" : "dark"}</button>
         </div>
       </nav>
     </aside>

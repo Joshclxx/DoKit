@@ -174,7 +174,7 @@ export default function FocusFlow() {
             onClick={() => setRunning(!running)}
             className="flex h-12 w-32 items-center justify-center rounded-xl bg-accent text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 transition-all hover:bg-accent-hover hover:-translate-y-0.5 active:translate-y-0"
           >
-            {running ? "⏸ Pause" : "▶ Start"}
+            {running ? " Pause" : " Start"}
           </button>
           <button
             onClick={reset}

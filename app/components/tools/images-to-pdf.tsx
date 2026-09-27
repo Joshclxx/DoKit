@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { downloadCanvasPagesAsPdf } from "@/lib/utils/pdf-download";
 
 interface ImageItem { src: string; name: string; width: number; height: number; }
 
@@ -18,7 +19,6 @@ export default function ImagesToPdf() {
   const [orientation, setOrientation] = useState<Orientation>("portrait");
   const [fitMode, setFitMode] = useState<FitMode>("fit");
   const [margin, setMargin] = useState(20);
-  const quality = 0.85;
   const [generating, setGenerating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +51,7 @@ export default function ImagesToPdf() {
   const generatePdf = useCallback(async () => {
     if (images.length === 0) return;
     setGenerating(true);
+    try {
 
     const [baseW, baseH] = pageSizes[pageSize];
     const pw = orientation === "landscape" ? baseH : baseW;
@@ -96,31 +97,13 @@ export default function ImagesToPdf() {
       pageCanvases.push(pageCanvas);
     }
 
-    // For browser-only: download individual pages as images or combine
-    // Using window.print approach for actual PDF, or download as images
-    if (pageCanvases.length === 1) {
-      const link = document.createElement("a");
-      link.download = "images-to-pdf-page.png";
-      link.href = pageCanvases[0].toDataURL("image/png");
-      link.click();
-    } else {
-      // Open in new window for printing as PDF
-      const html = pageCanvases.map((pc) => {
-        const dataUrl = pc.toDataURL("image/jpeg", quality);
-        return `<div style="page-break-after:always;margin:0;padding:0;display:flex;align-items:center;justify-content:center;width:100vw;height:100vh">
-          <img src="${dataUrl}" style="max-width:100%;max-height:100%;object-fit:contain" />
-        </div>`;
-      }).join("");
-
-      const win = window.open("", "_blank");
-      if (win) {
-        win.document.write(`<html><head><title>Images to PDF</title><style>@page{margin:0}body{margin:0}@media print{div{page-break-after:always}}</style></head><body>${html}<script>setTimeout(()=>window.print(),500)<\/script></body></html>`);
-        win.document.close();
-      }
+      downloadCanvasPagesAsPdf(pageCanvases, "images.pdf", [pw, ph]);
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    } finally {
+      setGenerating(false);
     }
-
-    setGenerating(false);
-  }, [images, pageSize, orientation, fitMode, margin, quality]);
+  }, [images, pageSize, orientation, fitMode, margin]);
 
   return (
     <div className="space-y-6">
@@ -160,7 +143,6 @@ export default function ImagesToPdf() {
         onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); }}
         onDragOver={(e) => e.preventDefault()}
         className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-surface/50 p-10 cursor-pointer transition-colors hover:border-accent hover:bg-accent/5">
-        <span className="text-3xl mb-2">📄</span>
         <span className="text-sm font-medium">Drop images here or click to browse</span>
         <span className="text-xs text-muted mt-1">JPG, PNG, WebP — one image per page</span>
         <input ref={inputRef} type="file" accept="image/*" multiple hidden onChange={(e) => e.target.files && handleFiles(e.target.files)} />
@@ -193,11 +175,7 @@ export default function ImagesToPdf() {
       {/* Export */}
       <button onClick={generatePdf} disabled={images.length === 0 || generating}
         className="w-full rounded-lg bg-accent py-3 text-sm font-semibold text-accent-fg shadow-lg shadow-accent/25 transition-all hover:bg-accent-hover disabled:opacity-40">
-        {generating
-          ? "Preparing…"
-          : images.length === 1
-            ? "🖼️ Export page as PNG"
-            : `🖨️ Open print layout (${images.length} pages)`}
+        {generating ? "Preparing…" : `Export PDF (${images.length} page${images.length === 1 ? "" : "s"})`}
       </button>
     </div>
   );

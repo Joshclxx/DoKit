@@ -100,9 +100,9 @@ export default function CurrencyConverter() {
         <div className="mt-3 flex items-center justify-between text-sm text-muted">
           <span>1 {fromCode} = {fmt(exchangeRate, 4)} {toCode}</span>
           <button onClick={async () => { await copyToClipboard(`${from.symbol}${fmt(amount)} = ${to.symbol}${fmt(converted)}`); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-            className="text-xs hover:text-foreground">{copied ? "✓ Copied" : "📋 Copy"}</button>
+            className="text-xs hover:text-foreground">{copied ? "✓ Copied" : " Copy"}</button>
         </div>
-        <p className="mt-1 text-[10px] text-muted">⚠ Offline rates — approximate values for reference only</p>
+        <p className="mt-1 text-[10px] text-muted"> Offline rates — approximate values for reference only</p>
       </div>
 
       {/* Quick reference table */}
