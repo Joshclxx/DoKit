@@ -58,6 +58,7 @@ export const tools: Tool[] = [
   { id: "F-42", name: "Encoder / Decoder", slug: "encoder-decoder", category: "Developer", description: "Encode and decode Base64, URL, HTML, Hex, Binary, and Unicode", icon: "" },
   { id: "F-43", name: "Password Generator", slug: "password-generator", category: "Developer", description: "Generate strong passwords with customizable length, characters, and entropy scoring", icon: "" },
   { id: "F-44", name: "Hash Generator", slug: "hash-generator", category: "Developer", description: "Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text input", icon: "" },
+  { id: "F-45", name: "Markdown to PDF Converter", slug: "markdown-to-pdf", category: "PDF", description: "Write or paste Markdown, preview the formatted document, and download it as a PDF", icon: "" },
 ];
 
 export const categories: Category[] = [

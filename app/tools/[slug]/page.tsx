@@ -25,6 +25,9 @@ const toolComponents: Record<string, ComponentType> = {
   "markdown-editor": dynamic(
     () => import("@/app/components/tools/markdown-editor")
   ),
+  "markdown-to-pdf": dynamic(
+    () => import("@/app/components/tools/markdown-editor")
+  ),
   "structured-communication-builder": dynamic(
     () => import("@/app/components/tools/structured-communication-builder")
   ),

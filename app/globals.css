@@ -191,6 +191,42 @@ body {
   line-height: 1.75;
   color: var(--fg);
 }
+.prose-dokit.markdown-pdf-sheet {
+  color: #222;
+  background: #fff;
+}
+.prose-dokit.markdown-pdf-sheet h1,
+.prose-dokit.markdown-pdf-sheet h2,
+.prose-dokit.markdown-pdf-sheet h3,
+.prose-dokit.markdown-pdf-sheet h4,
+.prose-dokit.markdown-pdf-sheet h5,
+.prose-dokit.markdown-pdf-sheet h6,
+.prose-dokit.markdown-pdf-sheet p,
+.prose-dokit.markdown-pdf-sheet li,
+.prose-dokit.markdown-pdf-sheet strong {
+  color: #222;
+}
+.prose-dokit.markdown-pdf-sheet h2,
+.prose-dokit.markdown-pdf-sheet hr {
+  border-color: #cbd5d1;
+}
+.prose-dokit.markdown-pdf-sheet a {
+  color: #075d50;
+}
+.prose-dokit.markdown-pdf-sheet blockquote {
+  color: #4b5563;
+}
+.prose-dokit.markdown-pdf-sheet code,
+.prose-dokit.markdown-pdf-sheet pre.code-block {
+  background: #f1f5f3;
+  border-color: #d8e1dd;
+}
+.prose-dokit.markdown-pdf-sheet pre.code-block code {
+  background: transparent;
+}
+.prose-dokit.markdown-pdf-sheet del {
+  color: #59615e;
+}
 .prose-dokit h1, .prose-dokit h2, .prose-dokit h3,
 .prose-dokit h4, .prose-dokit h5, .prose-dokit h6 {
   font-weight: 700;

@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { copyToClipboard, downloadFile } from "@/lib/utils/download";
+import { A4_PAGE_POINTS, downloadHtmlPagesAsPdf } from "@/lib/utils/pdf-download";
 
 type Tone = "formal" | "professional" | "casual" | "friendly";
-type CommType = "follow-up" | "inquiry" | "reminder" | "cover-letter" | "thank-you" | "introduction";
+type CommType = "follow-up" | "inquiry" | "reminder" | "cover-letter" | "resignation-letter" | "thank-you" | "introduction";
 
 interface Template {
   type: CommType;
@@ -55,12 +56,24 @@ const templates: Template[] = [
     type: "cover-letter",
     label: "Cover Letter",
     icon: "",
-    fields: ["recipientName", "company", "role", "keySkill", "achievement"],
+    fields: ["yourName", "recipientName", "company", "role", "keySkill", "achievement", "motivation"],
     templates: {
-      formal: "Dear {recipientName},\n\nI am writing to express my keen interest in the {role} position at {company}.\n\nWith my expertise in {keySkill}, I am confident in my ability to contribute meaningfully to your team. {achievement}\n\nI would welcome the opportunity to discuss how my background aligns with your needs.\n\nYours sincerely,\n[Your Name]",
-      professional: "Hi {recipientName},\n\nI'm excited to apply for the {role} position at {company}.\n\nMy background in {keySkill} has prepared me well for this role. {achievement}\n\nI'd love the chance to discuss how I can contribute to your team.\n\nBest regards,\n[Your Name]",
-      casual: "Hey {recipientName},\n\nI saw the {role} opening at {company} and it looks like a great fit.\n\nI bring strong {keySkill} skills to the table. {achievement}\n\nWould love to chat more about it.\n\nCheers,\n[Your Name]",
-      friendly: "Hi {recipientName}! \n\nI came across the {role} role at {company} and got really excited!\n\nI'm passionate about {keySkill} and think I could bring real value. {achievement}\n\nWould be awesome to connect and learn more!\n\nWarmly,\n[Your Name]",
+      formal: "Dear {recipientName},\n\nI am writing to express my keen interest in the {role} position at {company}. {motivation}\n\nWith my expertise in {keySkill}, I am confident in my ability to contribute meaningfully to your team. {achievement}\n\nI would welcome the opportunity to discuss how my background aligns with your needs.\n\nYours sincerely,\n{yourName}",
+      professional: "Dear {recipientName},\n\nI'm excited to apply for the {role} position at {company}. {motivation}\n\nMy background in {keySkill} has prepared me well for this role. {achievement}\n\nI'd welcome the chance to discuss how I can contribute to your team.\n\nBest regards,\n{yourName}",
+      casual: "Hi {recipientName},\n\nI saw the {role} opening at {company} and it looks like a great fit. {motivation}\n\nI bring strong {keySkill} skills to the table. {achievement}\n\nWould love to chat more about it.\n\nCheers,\n{yourName}",
+      friendly: "Hi {recipientName},\n\nI came across the {role} role at {company} and got really excited! {motivation}\n\nI'm passionate about {keySkill} and think I could bring real value. {achievement}\n\nWould be great to connect and learn more!\n\nWarmly,\n{yourName}",
+    },
+  },
+  {
+    type: "resignation-letter",
+    label: "Resignation Letter",
+    icon: "",
+    fields: ["yourName", "recipientName", "company", "role", "date", "lastDay", "reason", "transitionHelp"],
+    templates: {
+      formal: "{date}\n\nDear {recipientName},\n\nPlease accept this letter as formal notice of my resignation from my position as {role} at {company}. My last working day will be {lastDay}.\n\n{reason}\n\nI will do what I can to support a smooth transition before my departure. {transitionHelp}\n\nThank you for the opportunity to contribute to the team. I wish you and {company} continued success.\n\nYours sincerely,\n{yourName}",
+      professional: "{date}\n\nDear {recipientName},\n\nI am writing to formally resign from my role as {role} at {company}, effective {lastDay}.\n\n{reason}\n\nI appreciate the opportunities I have had here. I am happy to help with the transition. {transitionHelp}\n\nBest regards,\n{yourName}",
+      casual: "{date}\n\nHi {recipientName},\n\nI wanted to let you know that I am resigning from my {role} position at {company}. My last day will be {lastDay}.\n\n{reason}\n\nThanks for everything. I'll help make the handover as smooth as possible. {transitionHelp}\n\nBest,\n{yourName}",
+      friendly: "{date}\n\nDear {recipientName},\n\nI am writing to share that I will be leaving my {role} position at {company}, with my last day on {lastDay}.\n\n{reason}\n\nI am grateful for my time with the team and will gladly help with the transition. {transitionHelp}\n\nWarm regards,\n{yourName}",
     },
   },
   {
@@ -98,6 +111,11 @@ const tones: { value: Tone; label: string }[] = [
 
 const fieldLabels: Record<string, string> = {
   recipientName: "Recipient Name",
+  yourName: "Your Name",
+  date: "Date",
+  lastDay: "Last Working Day",
+  reason: "Optional Note / Reason",
+  transitionHelp: "Transition Support (optional)",
   subject: "Subject",
   previousDate: "Previous Date",
   keyPoint: "Key Point",
@@ -110,6 +128,7 @@ const fieldLabels: Record<string, string> = {
   role: "Role / Position",
   keySkill: "Key Skill",
   achievement: "Notable Achievement",
+  motivation: "Why This Company / Role (optional)",
   occasion: "Occasion",
   specificThanks: "Specific Thanks",
   yourRole: "Your Role",
@@ -127,9 +146,13 @@ export default function StructuredCommunicationBuilder() {
   const output = useMemo(() => {
     let text = template.templates[tone];
     for (const field of template.fields) {
-      const value = fields[field]?.trim() || `[${fieldLabels[field] || field}]`;
+      const value = fields[field]?.trim() || (field === "date" ? new Date().toLocaleDateString() : `[${fieldLabels[field] || field}]`);
       text = text.replaceAll(`{${field}}`, value);
     }
+    text = text.replace(/\[Why This Company \/ Role \(optional\)\]/g, "")
+      .replace(/\[Optional Note \/ Reason\]/g, "")
+      .replace(/\[Transition Support \(optional\)\]/g, "")
+      .replace(/[ \t]+\n/g, "\n");
     return text;
   }, [template, tone, fields]);
 
@@ -137,6 +160,17 @@ export default function StructuredCommunicationBuilder() {
     await copyToClipboard(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleExportPdf = async () => {
+    const article = document.createElement("article");
+    article.textContent = output;
+    article.style.cssText = "box-sizing:border-box;width:210mm;min-height:297mm;padding:16mm;background:#fff;color:#222;font-family:Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere";
+    try {
+      await downloadHtmlPagesAsPdf([article], `${selectedType}.pdf`, { pageSize: A4_PAGE_POINTS, marginsMm: [0, 0, 0, 0] });
+    } catch {
+      window.alert("The PDF could not be exported. Please try again.");
+    }
   };
 
   return (
@@ -188,7 +222,7 @@ export default function StructuredCommunicationBuilder() {
             <label className="mb-1 block text-sm font-medium text-muted">
               {fieldLabels[field] || field}
             </label>
-            {field.includes("Question") || field.includes("Thanks") || field === "context" || field === "achievement" || field === "purpose" || field === "keyPoint" ? (
+            {field.includes("Question") || field.includes("Thanks") || field === "context" || field === "achievement" || field === "purpose" || field === "keyPoint" || field === "reason" || field === "transitionHelp" || field === "motivation" ? (
               <textarea
                 value={fields[field] || ""}
                 onChange={(e) => setFields((f) => ({ ...f, [field]: e.target.value }))}
@@ -221,6 +255,10 @@ export default function StructuredCommunicationBuilder() {
             <button onClick={() => downloadFile(output, `${selectedType}.txt`)}
               className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface-hover">
               Export .txt
+            </button>
+            <button onClick={handleExportPdf}
+              className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover">
+              Export A4 PDF
             </button>
           </div>
         </div>

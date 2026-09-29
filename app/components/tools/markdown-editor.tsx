@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef } from "react";
 import { copyToClipboard, downloadFile } from "@/lib/utils/download";
-import { downloadHtmlPagesAsPdf } from "@/lib/utils/pdf-download";
+import { A4_PAGE_POINTS, downloadHtmlPagesAsPdf } from "@/lib/utils/pdf-download";
 
 /* ── Minimal Markdown → HTML parser ──────────────── */
 function mdToHtml(md: string): string {
@@ -164,12 +164,12 @@ export default function MarkdownEditor() {
   };
 
   const handleExport = async () => {
-    const content = document.createElement("article");
-    content.className = "prose-dokit";
-    content.style.cssText = "background:#fff;color:#222;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.7";
-    content.innerHTML = rendered;
+    const article = document.createElement("article");
+    article.className = "prose-dokit markdown-pdf-sheet";
+    article.style.cssText = "box-sizing:border-box;width:210mm;min-height:297mm;padding:16mm;background:#fff;color:#222;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.7";
+    article.innerHTML = rendered;
     try {
-      await downloadHtmlPagesAsPdf([content], "document.pdf", { marginsMm: [16, 16, 16, 16] });
+      await downloadHtmlPagesAsPdf([article], "document.pdf", { pageSize: A4_PAGE_POINTS, marginsMm: [0, 0, 0, 0] });
     } catch {
       window.alert("The PDF could not be exported. Please try again.");
     }
@@ -207,6 +207,30 @@ export default function MarkdownEditor() {
         ))}
       </div>
 
+      {/* Export bar */}
+      <div className="tool-action-bar flex flex-wrap gap-2">
+        <button onClick={handleExport}
+          className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover">
+          Export A4 PDF
+        </button>
+        <button onClick={() => handleCopy(content, "md")}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
+          {copied === "md" ? "✓ Copied" : "Copy MD"}
+        </button>
+        <button onClick={() => handleCopy(rendered, "html")}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
+          {copied === "html" ? "✓ Copied" : "Copy HTML"}
+        </button>
+        <button onClick={() => downloadFile(content, "document.md", "text/markdown")}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
+          Export .md
+        </button>
+        <button onClick={() => downloadFile(rendered, "document.html", "text/html")}
+          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
+          Export .html
+        </button>
+      </div>
+
       {/* Editor panes */}
       <div className={`grid gap-4 ${view === "split" ? "lg:grid-cols-2" : ""}`}>
         {/* Editor */}
@@ -230,37 +254,17 @@ export default function MarkdownEditor() {
         {view !== "edit" && (
           <div className={`${view === "split" ? "hidden lg:flex" : "flex"} flex-col`}>
             <div className="mb-1 text-xs text-muted">Preview</div>
-            <div
-              className="prose-dokit min-h-[500px] flex-1 overflow-y-auto rounded-lg border border-border bg-surface p-6"
-              dangerouslySetInnerHTML={{ __html: rendered }}
-            />
+            <div className="flex min-h-[500px] flex-1 justify-center overflow-auto rounded-lg border border-border bg-[#e7e9ec] p-3 sm:p-6">
+              <article
+                className="prose-dokit markdown-pdf-sheet box-border min-h-[1123px] w-[794px] max-w-full shrink-0 bg-white p-8 text-[#222] shadow-lg sm:p-[60px]"
+                style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", fontSize: 14, lineHeight: 1.7 }}
+                dangerouslySetInnerHTML={{ __html: rendered }}
+              />
+            </div>
           </div>
         )}
       </div>
 
-      {/* Export bar */}
-      <div className="tool-action-bar flex flex-wrap gap-2">
-        <button onClick={() => handleCopy(content, "md")}
-          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          {copied === "md" ? "✓ Copied" : "Copy MD"}
-        </button>
-        <button onClick={() => handleCopy(rendered, "html")}
-          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          {copied === "html" ? "✓ Copied" : "Copy HTML"}
-        </button>
-        <button onClick={() => downloadFile(content, "document.md", "text/markdown")}
-          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          Export .md
-        </button>
-        <button onClick={() => downloadFile(rendered, "document.html", "text/html")}
-          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          Export .html
-        </button>
-        <button onClick={handleExport}
-          className="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-hover">
-          Export PDF
-        </button>
-      </div>
     </div>
   );
 }

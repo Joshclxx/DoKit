@@ -30,6 +30,7 @@ export const kits: Kit[] = [
       "bulk-certificate-generator",
       "id-card-badge-generator",
       "ats-resume-builder",
+      "markdown-to-pdf",
     ],
   },
   {
